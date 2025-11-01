@@ -12,13 +12,18 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, GRADIENTS } from '../constants/colors';
 import { getRandomVerse } from '../constants/levels';
-import { getProgress } from '../utils/storage';
+import { getProgress, getAllStats } from '../utils/storage';
 
 const { width, height } = Dimensions.get('window');
 
 export const HomeScreen = ({ navigation }) => {
   const [verse, setVerse] = useState('');
   const [completedCount, setCompletedCount] = useState(0);
+  const [bestTime, setBestTime] = useState(null);
+  const [bestMoves, setBestMoves] = useState(null);
+  const [totalGames, setTotalGames] = useState(0);
+  const [currentTime, setCurrentTime] = useState(null);
+  const [currentMoves, setCurrentMoves] = useState(null);
 
   const titleY = new Animated.Value(0);
   const subtitle1Op = new Animated.Value(1);
@@ -38,10 +43,56 @@ export const HomeScreen = ({ navigation }) => {
     button2Scale.setValue(1);
   }, []);
 
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
   const loadProgress = async () => {
     const progress = await getProgress();
     const completed = Object.values(progress).filter(Boolean).length;
     setCompletedCount(completed);
+    
+    // Load achievement stats
+    const stats = await getAllStats();
+    let bestTimeValue = null;
+    let bestMovesValue = null;
+    let gamesCount = 0;
+    let latestCompletedTime = null;
+    let latestCompletedMoves = null;
+    let latestTimestamp = 0;
+    
+    Object.entries(stats).forEach(([levelId, stat]) => {
+      if (stat.completed) {
+        gamesCount++;
+        
+        // Track best records
+        if (stat.timeTaken && (bestTimeValue === null || stat.timeTaken < bestTimeValue)) {
+          bestTimeValue = stat.timeTaken;
+        }
+        if (stat.movesUsed !== undefined && (bestMovesValue === null || stat.movesUsed < bestMovesValue)) {
+          bestMovesValue = stat.movesUsed;
+        }
+        
+        // Track most recent completed game
+        if (stat.timestamp && stat.timestamp > latestTimestamp) {
+          latestTimestamp = stat.timestamp;
+          latestCompletedTime = stat.timeTaken;
+          latestCompletedMoves = stat.movesUsed;
+        }
+      }
+    });
+    
+    setBestTime(bestTimeValue);
+    setBestMoves(bestMovesValue);
+    setTotalGames(gamesCount);
+    
+    // If there are completed games, show the most recent stats
+    if (gamesCount > 0) {
+      setCurrentTime(latestCompletedTime);
+      setCurrentMoves(latestCompletedMoves);
+    }
   };
 
   return (
@@ -76,17 +127,7 @@ export const HomeScreen = ({ navigation }) => {
               <Text style={styles.decorText}>✨ Unlock Sacred Stories ✨</Text>
             </View>
           </Animated.View>
-
-          {/* Verse of the Day with enhanced styling */}
-          <Animated.View style={[styles.verseContainer, { opacity: subtitle1Op }]}>
-            <View style={styles.verseHeader}>
-              <Text style={styles.verseLabel}>💫 Verse of the Day</Text>
-            </View>
-            <View style={styles.verseContent}>
-              <Text style={styles.verseText}>{verse}</Text>
-            </View>
-          </Animated.View>
-
+          
           {/* Enhanced Progress Display */}
           <Animated.View style={[styles.progressContainer, { opacity: subtitle2Op }]}>
             <View style={styles.progressCard}>
@@ -99,6 +140,80 @@ export const HomeScreen = ({ navigation }) => {
                 <Text style={styles.progressNumber}>6</Text>
                 <Text style={styles.progressLabel}>Total Stories</Text>
               </View>
+            </View>
+          </Animated.View>
+
+          {/* Achievement Records */}
+          <Animated.View style={[styles.achievementContainer, { opacity: subtitle2Op }]}>
+            <View style={styles.achievementCard}>
+              <View style={styles.achievementHeader}>
+                <Text style={styles.achievementTitle}>🏆 Personal Records</Text>
+              </View>
+              
+              {totalGames > 0 ? (
+                <View>
+                  {/* Current Game Stats */}
+                  <View style={styles.currentGameSection}>
+                    <Text style={styles.currentGameLabel}>Last Game</Text>
+                    <View style={styles.currentGameStats}>
+                      <View style={styles.currentGameItem}>
+                        <Text style={styles.currentGameIcon}>⏱️</Text>
+                        <Text style={styles.currentGameValue}>{formatTime(currentTime)}</Text>
+                      </View>
+                      <View style={styles.currentGameDivider} />
+                      <View style={styles.currentGameItem}>
+                        <Text style={styles.currentGameIcon}>🎯</Text>
+                        <Text style={styles.currentGameValue}>{currentMoves} moves</Text>
+                      </View>
+                    </View>
+                  </View>
+                  
+                  {/* Best Records */}
+                  <View style={styles.bestRecordsSection}>
+                    <Text style={styles.bestRecordsLabel}>All-Time Best</Text>
+                    <View style={styles.bestRecordsStats}>
+                      <View style={styles.bestRecordItem}>
+                        <Text style={styles.bestRecordIcon}>⚡</Text>
+                        <View style={styles.bestRecordInfo}>
+                          <Text style={styles.bestRecordLabel}>Time</Text>
+                          <Text style={[
+                            styles.bestRecordValue,
+                            currentTime === bestTime && styles.newRecord
+                          ]}>
+                            {formatTime(bestTime)}
+                            {currentTime === bestTime && ' 🏆'}
+                          </Text>
+                        </View>
+                      </View>
+                      <View style={styles.bestRecordDivider} />
+                      <View style={styles.bestRecordItem}>
+                        <View style={styles.bestRecordInfo}>
+                          <Text style={styles.bestRecordLabel}>Moves</Text>
+                          <Text style={[
+                            styles.bestRecordValue,
+                            currentMoves === bestMoves && styles.newRecord
+                          ]}>
+                            {bestMoves}
+                            {currentMoves === bestMoves && ' 🏆'}
+                          </Text>
+                        </View>
+                      </View>
+                      <View style={styles.bestRecordDivider} />
+                      <View style={styles.bestRecordItem}>
+                        <Text style={styles.bestRecordIcon}>🎮</Text>
+                        <View style={styles.bestRecordInfo}>
+                          <Text style={styles.bestRecordLabel}>Won</Text>
+                          <Text style={styles.bestRecordValue}>{totalGames}</Text>
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              ) : (
+                <View style={styles.noGamesContainer}>
+                  <Text style={styles.noGamesText}>Complete puzzles to see your records!</Text>
+                </View>
+              )}
             </View>
           </Animated.View>
 
@@ -136,7 +251,7 @@ export const HomeScreen = ({ navigation }) => {
           <View style={styles.footer}>
             <View style={styles.footerCard}>
               <Text style={styles.footerText}>
-                🙏 Complete puzzles to discover Bible stories
+                Complete puzzles to discover Bible stories
               </Text>
             </View>
           </View>
@@ -314,6 +429,179 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textTransform: 'uppercase',
     letterSpacing: 1,
+  },
+  achievementContainer: {
+    marginBottom: 30,
+  },
+  achievementCard: {
+    backgroundColor: COLORS.white + '15',
+    borderRadius: 16,
+    padding: 20,
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  achievementHeader: {
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  achievementTitle: {
+    fontSize: 16,
+    color: COLORS.gold,
+    fontWeight: '700',
+    textAlign: 'center',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+  },
+  achievementStats: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  achievementItem: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  achievementIcon: {
+    fontSize: 20,
+    marginRight: 8,
+  },
+  achievementInfo: {
+    alignItems: 'center',
+  },
+  achievementLabel: {
+    fontSize: 10,
+    color: COLORS.light,
+    fontWeight: '600',
+    textAlign: 'center',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginBottom: 4,
+  },
+  achievementValue: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.white,
+    textAlign: 'center',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+  },
+  achievementDivider: {
+    width: 1,
+    height: 40,
+    backgroundColor: COLORS.white + '30',
+    marginHorizontal: 12,
+  },
+  currentGameSection: {
+    marginBottom: 16,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.white + '20',
+  },
+  currentGameLabel: {
+    fontSize: 12,
+    color: COLORS.gold,
+    fontWeight: '600',
+    textAlign: 'center',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    marginBottom: 8,
+  },
+  currentGameStats: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  currentGameItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  currentGameIcon: {
+    fontSize: 16,
+    marginRight: 6,
+    color: COLORS.light,
+  },
+  currentGameValue: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: COLORS.white,
+  },
+  currentGameDivider: {
+    width: 1,
+    height: 30,
+    backgroundColor: COLORS.white + '20',
+  },
+  bestRecordsSection: {
+    // No additional styles needed
+  },
+  bestRecordsLabel: {
+    fontSize: 12,
+    color: COLORS.gold,
+    fontWeight: '600',
+    textAlign: 'center',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    marginBottom: 8,
+  },
+  bestRecordsStats: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  bestRecordItem: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  bestRecordIcon: {
+    fontSize: 18,
+    marginRight: 6,
+  },
+  bestRecordInfo: {
+    alignItems: 'center',
+  },
+  bestRecordLabel: {
+    fontSize: 10,
+    color: COLORS.light,
+    fontWeight: '600',
+    textAlign: 'center',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginBottom: 4,
+  },
+  bestRecordValue: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: COLORS.white,
+    textAlign: 'center',
+  },
+  newRecord: {
+    color: COLORS.gold,
+    textShadowColor: 'rgba(255, 215, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 4,
+  },
+  bestRecordDivider: {
+    width: 1,
+    height: 40,
+    backgroundColor: COLORS.white + '30',
+    marginHorizontal: 8,
+  },
+  noGamesContainer: {
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
+  noGamesText: {
+    fontSize: 14,
+    color: COLORS.light,
+    fontStyle: 'italic',
+    textAlign: 'center',
   },
   buttonContainer: {
     marginBottom: 16,

@@ -21,7 +21,7 @@ export const GameOverModal = ({
   onRetry, 
   onBackToLevels, 
   levelTitle,
-  movesUsed,
+  restartCount,
   maxMoves,
   timeTaken = 0
 }) => {
@@ -200,20 +200,27 @@ export const GameOverModal = ({
                     <Text style={styles.subtitle}>{levelTitle}</Text>
                   </View>
 
-                  {/* Stats */}
+{/* Stats */}
                   <View style={styles.statsContainer}>
                     <View style={styles.statBox}>
                       <Text style={styles.statLabel}>⏱️ Time</Text>
                       <Text style={styles.statValue}>{formatTime(timeTaken)}</Text>
                     </View>
                     <View style={styles.statBox}>
-                      <Text style={styles.statLabel}>🎯 Moves</Text>
-                      <Text style={styles.statValue}>{movesUsed}/{maxMoves}</Text>
+                      <Text style={styles.statLabel}>🔄 Restarts</Text>
+                      <Text style={styles.statValue}>{restartCount}</Text>
+                    </View>
+                    <View style={styles.statBox}>
+                      <Text style={styles.statLabel}>📊 Status</Text>
+                      <Text style={styles.statValue}>❌ Incomplete</Text>
                     </View>
                   </View>
 
                   {/* Message */}
                   <View style={styles.messageContainer}>
+                    <Text style={styles.messageText}>
+                      The path was challenging, but wisdom comes through perseverance!
+                    </Text>
                     <Text style={styles.challengeText}>
                       Answer a biblical question to earn another chance!
                     </Text>

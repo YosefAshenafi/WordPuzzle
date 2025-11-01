@@ -208,6 +208,7 @@ export const GameScreen = ({ route, navigation }) => {
             moveCount={moveCount}
             maxMoves={level.moves}
             showHints={showHints}
+            restartCount={restartCount}
           />
         )}
 
@@ -255,7 +256,7 @@ export const GameScreen = ({ route, navigation }) => {
         onRetry={handleRetryFromQuiz}
         onBackToLevels={handleBackToLevels}
         levelTitle={level.title}
-        movesUsed={moveCount}
+        restartCount={restartCount}
         maxMoves={level.moves}
         timeTaken={timer}
       />

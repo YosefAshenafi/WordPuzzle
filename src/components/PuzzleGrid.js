@@ -21,6 +21,7 @@ export const PuzzleGrid = ({
   moveCount,
   maxMoves,
   showHints,
+  restartCount,
 }) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
@@ -47,8 +48,8 @@ export const PuzzleGrid = ({
     <View style={styles.container}>
       <View style={styles.statsContainer}>
         <View style={styles.statBox}>
-          <Text style={styles.statLabel}>Moves</Text>
-          <Text style={styles.statValue}>{moveCount}</Text>
+          <Text style={styles.statLabel}>Try</Text>
+          <Text style={styles.statValue}>{restartCount}</Text>
         </View>
         <View style={styles.statBox}>
           <Text style={styles.statLabel}>Limit</Text>
