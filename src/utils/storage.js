@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const PROGRESS_KEY = '@biblepuzzlequest_progress';
 const GAME_DATA_KEY = '@biblepuzzlequest_gamedata';
 const QUIZ_STATE_KEY = '@biblepuzzlequest_quizstate';
+const BADGES_KEY = '@biblepuzzlequest_badges';
 
 export const saveProgress = async (levelId, completed) => {
   try {
@@ -154,6 +155,44 @@ export const clearCurrentGameState = async (levelId) => {
     return true;
   } catch (error) {
     console.error('Error clearing current game state:', error);
+    return false;
+  }
+};
+
+// Save badges
+export const saveBadges = async (badgeIds) => {
+  try {
+    await AsyncStorage.setItem(BADGES_KEY, JSON.stringify(badgeIds));
+    return true;
+  } catch (error) {
+    console.error('Error saving badges:', error);
+    return false;
+  }
+};
+
+// Get badges
+export const getBadges = async () => {
+  try {
+    const data = await AsyncStorage.getItem(BADGES_KEY);
+    return data ? JSON.parse(data) : [];
+  } catch (error) {
+    console.error('Error getting badges:', error);
+    return [];
+  }
+};
+
+// Add a badge
+export const addBadge = async (badgeId) => {
+  try {
+    const existingBadges = await getBadges();
+    if (!existingBadges.includes(badgeId)) {
+      const updatedBadges = [...existingBadges, badgeId];
+      await saveBadges(updatedBadges);
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error('Error adding badge:', error);
     return false;
   }
 };
