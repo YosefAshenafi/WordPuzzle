@@ -65,8 +65,8 @@ export const HomeScreen = ({ navigation }) => {
         >
           {/* Title with enhanced styling */}
           <Animated.View style={[styles.titleContainer, { transform: [{ translateY: titleY }] }]}>
-            <Text style={styles.title}>📖 Bible</Text>
-            <Text style={styles.titleHighlight}>Puzzle Quest</Text>
+            <Text style={styles.title}>🧩</Text>
+            <Text style={styles.titleHighlight}>Bizzle</Text>
             <View style={styles.titleUnderline} />
           </Animated.View>
 
@@ -191,15 +191,14 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingVertical: 30,
+    paddingBottom: 30,
     minHeight: height,
   },
   titleContainer: {
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     marginBottom: 40,
     flex: 1,
-    paddingBottom: 40,
   },
   title: {
     fontSize: 42,
