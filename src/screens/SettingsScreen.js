@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import {
   Alert,
   Dimensions,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, GRADIENTS } from '../constants/colors';
@@ -29,6 +30,13 @@ export const SettingsScreen = ({ navigation }) => {
     loadSettings();
     loadAchievements();
   }, []);
+
+  // Refresh achievements when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      loadAchievements();
+    }, [])
+  );
 
   const loadSettings = async () => {
     // Load sound preference from storage

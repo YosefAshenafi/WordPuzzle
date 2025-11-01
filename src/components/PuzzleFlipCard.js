@@ -15,7 +15,7 @@ import { COLORS, GRADIENTS } from '../constants/colors';
 
 const { width, height } = Dimensions.get('window');
 
-export const PuzzleFlipCard = ({ visible, levelData, onClose }) => {
+export const PuzzleFlipCard = ({ visible, levelData, onClose, moveCount, timeTaken }) => {
   const [flipAnimation] = useState(new Animated.Value(0));
   const [contentOpacity] = useState(new Animated.Value(0));
 
@@ -73,6 +73,12 @@ export const PuzzleFlipCard = ({ visible, levelData, onClose }) => {
     outputRange: [0, 0, 1],
   });
 
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
   if (!levelData) return null;
 
   return (
@@ -113,10 +119,14 @@ export const PuzzleFlipCard = ({ visible, levelData, onClose }) => {
                     style={styles.puzzleImage}
                     resizeMode="cover"
                   />
-                  <View style={styles.imageOverlay}>
-                    <Text style={styles.congratulationsText}>🎉 Puzzle Completed! 🎉</Text>
-                    <Text style={styles.flipHint}>Tap to reveal the story</Text>
-                  </View>
+                   <View style={styles.imageOverlay}>
+                     <Text style={styles.congratulationsText}>🎉 Puzzle Completed! 🎉</Text>
+                     <View style={styles.statsContainer}>
+                       <Text style={styles.statsText}>⏱️ {formatTime(timeTaken || 0)}</Text>
+                       <Text style={styles.statsText}>🎯 {moveCount || 0} moves</Text>
+                     </View>
+                     <Text style={styles.flipHint}>Tap to reveal story</Text>
+                   </View>
                 </View>
               </LinearGradient>
             </Animated.View>
@@ -273,6 +283,22 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0, 0, 0, 0.5)',
     textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 4,
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 20,
+    marginBottom: 20,
+  },
+  statsText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.white,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 15,
+    textAlign: 'center',
   },
   flipHint: {
     fontSize: 16,

@@ -2,7 +2,7 @@ import 'react-native-reanimated';
 import React, { useEffect, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import * as SplashScreen from 'expo-splash-screen';
+
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { CustomSplashScreen } from './src/components/CustomSplashScreen';
 import { initAudio } from './src/utils/audio';
@@ -14,9 +14,6 @@ export default function App() {
   useEffect(() => {
     async function prepare() {
       try {
-        // Keep the native splash screen visible
-        await SplashScreen.preventAutoHideAsync();
-        
         // Initialize audio
         await initAudio();
 
@@ -34,8 +31,6 @@ export default function App() {
   }, []);
 
   const handleSplashAnimationComplete = async () => {
-    // Hide the native splash screen
-    await SplashScreen.hideAsync();
     setShowSplash(false);
   };
 

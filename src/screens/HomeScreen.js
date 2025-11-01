@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,9 @@ import {
   SafeAreaView,
   Animated,
   Dimensions,
+  RefreshControl,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, GRADIENTS } from '../constants/colors';
 import { getRandomVerse, LEVELS } from '../constants/levels';
@@ -24,6 +26,7 @@ export const HomeScreen = ({ navigation }) => {
   const [totalGames, setTotalGames] = useState(0);
   const [currentTime, setCurrentTime] = useState(null);
   const [currentMoves, setCurrentMoves] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
 
   const titleY = new Animated.Value(0);
   const subtitle1Op = new Animated.Value(1);
@@ -42,6 +45,13 @@ export const HomeScreen = ({ navigation }) => {
     button1Scale.setValue(1);
     button2Scale.setValue(1);
   }, []);
+
+  // Refresh data when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      loadProgress();
+    }, [])
+  );
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
@@ -131,8 +141,20 @@ const loadProgress = async () => {
       // No games completed, set to null to avoid showing zeros
       setCurrentTime(null);
       setCurrentMoves(null);
+     }
+   };
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      await loadProgress();
+      setVerse(getRandomVerse());
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+    } finally {
+      setRefreshing(false);
     }
-  };
+  }, []);
 
   return (
     <LinearGradient
@@ -148,11 +170,19 @@ const loadProgress = async () => {
         <View style={[styles.decorCircle, styles.circle3]} />
       </View>
 
-      <SafeAreaView style={styles.safeArea}>
-        <ScrollView
-          contentContainerStyle={styles.content}
-          showsVerticalScrollIndicator={false}
-        >
+       <SafeAreaView style={styles.safeArea}>
+         <ScrollView
+           contentContainerStyle={styles.content}
+           showsVerticalScrollIndicator={false}
+           refreshControl={
+             <RefreshControl
+               refreshing={refreshing}
+               onRefresh={onRefresh}
+               tintColor={COLORS.gold}
+               colors={[COLORS.gold]}
+             />
+           }
+         >
           {/* Settings Button - Positioned absolutely */}
           <TouchableOpacity
             style={styles.settingsButtonTop}

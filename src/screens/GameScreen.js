@@ -186,10 +186,18 @@ const initializeGame = (isContinue = false) => {
     // Clear saved game state when completed
     await clearCurrentGameState(level.id);
 
-    await playVictorySound();
-    setTimeout(() => {
-      setShowFlipCard(true);
-    }, 500);
+     await playVictorySound();
+     
+     // Stop level music when flip card appears
+     if (level.sound) {
+       stopLevelSound(level.sound).catch(error => {
+         console.log('Error stopping level sound:', error);
+       });
+     }
+     
+     setTimeout(() => {
+       setShowFlipCard(true);
+     }, 500);
   };
 
   
@@ -275,14 +283,21 @@ const initializeGame = (isContinue = false) => {
       style={styles.container}
     >
       <SafeAreaView style={styles.safeArea}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity
-            onPress={handleBackToLevels}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-          >
-            <Text style={styles.backButton}>← Back</Text>
-          </TouchableOpacity>
+         {/* Header */}
+         <View style={styles.header}>
+           <TouchableOpacity
+             onPress={() => navigation.navigate('Home')}
+             style={styles.homeButton}
+             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+           >
+             <Text style={styles.homeIcon}>🧩</Text>
+           </TouchableOpacity>
+           <TouchableOpacity
+             onPress={handleBackToLevels}
+             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+           >
+             <Text style={styles.backButton}>← Back</Text>
+           </TouchableOpacity>
           <View>
             <Text style={styles.levelTitle}>{level.title}</Text>
             <Text style={styles.levelRef}>{level.bibleRef}</Text>
@@ -358,6 +373,8 @@ const initializeGame = (isContinue = false) => {
         visible={showFlipCard}
         levelData={level}
         onClose={handleCloseFlipCard}
+        moveCount={moveCount}
+        timeTaken={timer}
       />
 
       {/* Game Over Modal */}
@@ -390,6 +407,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     backgroundColor: COLORS.darker + 'CC',
+  },
+  homeButton: {
+    backgroundColor: COLORS.white + '20',
+    borderRadius: 20,
+    padding: 8,
+    borderWidth: 2,
+    borderColor: COLORS.gold + '40',
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  homeIcon: {
+    fontSize: 18,
   },
   backButton: {
     fontSize: 16,

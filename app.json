@@ -6,9 +6,7 @@
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "backgroundColor": "#1a1a2e"
-    },
+
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -33,8 +31,7 @@
           "microphonePermission": "Allow Bible Puzzle Quest to access your microphone.",
           "audioAndVideoPermission": "Allow Bible Puzzle Quest to access your audio and video."
         }
-      ],
-      "expo-splash-screen"
+      ]
     ],
     "experiments": {
       "typedRoutes": true
