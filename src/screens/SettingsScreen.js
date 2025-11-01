@@ -86,25 +86,12 @@ export const SettingsScreen = ({ navigation }) => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const handleAboutUs = () => {
+const handleAboutUs = () => {
     Alert.alert(
-      'About Bible Puzzle Quest',
+      '',
       '🧩 Bible Puzzle Quest\n\n' +
-      'An educational and entertaining puzzle game that brings Bible stories to life through engaging gameplay.\n\n' +
-      'Solve puzzles to discover sacred stories from the Bible, including Creation, Noah\'s Ark, David and Goliath, and more!\n\n' +
-      'Perfect for all ages who want to learn about biblical stories in a fun, interactive way.\n\n' +
-      'Made with faith and love',
-      [{ text: 'OK', style: 'default' }]
-    );
-  };
-
-  const handleContactUs = () => {
-    Alert.alert(
-      'Contact Us',
-      'We\'d love to hear from you!\n\n' +
-      'For feedback, suggestions, or support:\n' +
-      '📧 Email: support@biblepuzzlequest.com\n\n' +
-      'Your feedback helps us make the app better!',
+      'We are a group of multidisciplinary individuals dedicated to creating a fun Christian puzzle game that encourages kids to explore Bible verses and captivating stories. Our mission is to make learning about the Bible an unforgettable adventure, combining interactive puzzles with uplifting gospel music.\n\n' +
+      '',
       [{ text: 'OK', style: 'default' }]
     );
   };
@@ -190,10 +177,6 @@ export const SettingsScreen = ({ navigation }) => {
               <Text style={styles.menuItemText}>📖 About Us</Text>
               <Text style={styles.menuItemArrow}>›</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem} onPress={handleContactUs}>
-              <Text style={styles.menuItemText}>📧 Contact Us</Text>
-              <Text style={styles.menuItemArrow}>›</Text>
-            </TouchableOpacity>
             <View style={styles.menuItem}>
               <Text style={styles.menuItemText}>📱 App Version</Text>
               <Text style={styles.versionText}>1.0.0</Text>
@@ -247,7 +230,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: 20,
     paddingBottom: 30,
-    marginTop: 20,
+    marginTop: 35,
   },
   section: {
     marginBottom: 24,
