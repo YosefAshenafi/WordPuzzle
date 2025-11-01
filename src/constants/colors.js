@@ -20,3 +20,10 @@ export const GRADIENTS = {
   success: ['#10B981', '#059669'],
   gold: ['#F59E0B', '#D97706'],
 };
+
+export const QUIZ_CONFIG = {
+  MAX_QUESTIONS: 3,
+  TIMEOUT_SECONDS: 10,
+  CORRECT_ANSWER_REWARD: 'New game opportunity',
+  WRONG_ANSWER_PENALTY: 'Try next question',
+};

@@ -6,16 +6,19 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { COLORS, GRADIENTS } from '../constants/colors';
+import { COLORS, GRADIENTS, QUIZ_CONFIG } from '../constants/colors';
 import { LEVELS } from '../constants/levels';
 import { LevelCard } from '../components/LevelCard';
+import { QuizModal } from '../components/QuizModal';
 import { getProgress } from '../utils/storage';
 
 export const LevelSelectionScreen = ({ navigation }) => {
   const [progress, setProgress] = useState({});
   const [loading, setLoading] = useState(true);
+  const [showQuiz, setShowQuiz] = useState(false);
 
   useEffect(() => {
     loadProgress();
@@ -23,11 +26,15 @@ export const LevelSelectionScreen = ({ navigation }) => {
     return unsubscribe;
   }, [navigation]);
 
+  
+
   const loadProgress = async () => {
     const progressData = await getProgress();
     setProgress(progressData);
     setLoading(false);
   };
+
+  
 
   const isLevelUnlocked = (levelId) => {
     if (levelId === 1) return true;
@@ -38,8 +45,34 @@ export const LevelSelectionScreen = ({ navigation }) => {
     return progress[levelId] === true;
   };
 
-  const handleSelectLevel = (level) => {
-    navigation.navigate('Game', { level });
+  const handleCorrectAnswer = () => {
+    setShowQuiz(false);
+    Alert.alert(
+      '🎉 Wisdom Granted!',
+      'You have answered correctly! Your quest continues with a fresh start.',
+      [
+        {
+          text: 'Begin New Quest',
+          onPress: () => {
+            // Reset progress and start fresh
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Home' }],
+            });
+          },
+        },
+      ]
+    );
+  };
+
+const handleSelectLevel = (level) => {
+    const completedCount = Object.values(progress).filter(Boolean).length;
+    
+    if (completedCount === 6) {
+      setShowQuiz(true);
+    } else {
+      navigation.navigate('Game', { level });
+    }
   };
 
   const completedCount = Object.values(progress).filter(Boolean).length;
@@ -88,6 +121,15 @@ export const LevelSelectionScreen = ({ navigation }) => {
               <Text style={styles.completionText}>
                 You've unlocked all the sacred stories!
               </Text>
+              <Text style={styles.challengeText}>
+                ⚡ Answer the biblical question to continue your journey
+              </Text>
+              <TouchableOpacity
+                style={styles.quizButton}
+                onPress={() => setShowQuiz(true)}
+              >
+                <Text style={styles.quizButtonText}>📖 Face Divine Challenge</Text>
+              </TouchableOpacity>
               <TouchableOpacity
                 style={styles.replayButton}
                 onPress={() => navigation.navigate('Home')}
@@ -97,6 +139,12 @@ export const LevelSelectionScreen = ({ navigation }) => {
             </View>
           )}
         </ScrollView>
+        
+        <QuizModal
+          visible={showQuiz}
+          onClose={() => setShowQuiz(false)}
+          onCorrectAnswer={handleCorrectAnswer}
+        />
       </SafeAreaView>
     </LinearGradient>
   );
@@ -177,5 +225,45 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     color: COLORS.white,
+  },
+  quizButton: {
+    backgroundColor: COLORS.gold,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 8,
+    marginVertical: 10,
+  },
+  quizButtonText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: COLORS.darker,
+    textAlign: 'center',
+  },
+  timeoutContainer: {
+    backgroundColor: COLORS.warning + '20',
+    padding: 12,
+    borderRadius: 8,
+    marginVertical: 10,
+    borderWidth: 1,
+    borderColor: COLORS.warning,
+  },
+  timeoutText: {
+    fontSize: 14,
+    color: COLORS.warning,
+    textAlign: 'center',
+    fontWeight: '600',
+  },
+  countdownText: {
+    fontSize: 12,
+    color: COLORS.white,
+    textAlign: 'center',
+    marginTop: 4,
+  },
+  challengeText: {
+    fontSize: 14,
+    color: COLORS.gold,
+    textAlign: 'center',
+    marginBottom: 16,
+    fontStyle: 'italic',
   },
 });

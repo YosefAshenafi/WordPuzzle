@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PROGRESS_KEY = '@biblepuzzlequest_progress';
 const GAME_DATA_KEY = '@biblepuzzlequest_gamedata';
+const QUIZ_STATE_KEY = '@biblepuzzlequest_quizstate';
 
 export const saveProgress = async (levelId, completed) => {
   try {
@@ -67,5 +68,56 @@ export const getAllStats = async () => {
   } catch (error) {
     console.error('Error getting all stats:', error);
     return {};
+  }
+};
+
+export const saveQuizState = async (quizState) => {
+  try {
+    await AsyncStorage.setItem(QUIZ_STATE_KEY, JSON.stringify(quizState));
+    return true;
+  } catch (error) {
+    console.error('Error saving quiz state:', error);
+    return false;
+  }
+};
+
+export const getQuizState = async () => {
+  try {
+    const data = await AsyncStorage.getItem(QUIZ_STATE_KEY);
+    return data ? JSON.parse(data) : { canPlay: true, timeoutUntil: null };
+  } catch (error) {
+    console.error('Error getting quiz state:', error);
+    return { canPlay: true, timeoutUntil: null };
+  }
+};
+
+export const setQuizTimeout = async (timeoutSeconds) => {
+  try {
+    const timeoutUntil = Date.now() + (timeoutSeconds * 1000);
+    const quizState = { canPlay: false, timeoutUntil };
+    await saveQuizState(quizState);
+    return true;
+  } catch (error) {
+    console.error('Error setting quiz timeout:', error);
+    return false;
+  }
+};
+
+export const checkQuizTimeout = async () => {
+  try {
+    const quizState = await getQuizState();
+    if (!quizState.canPlay && quizState.timeoutUntil) {
+      if (Date.now() >= quizState.timeoutUntil) {
+        await saveQuizState({ canPlay: true, timeoutUntil: null });
+        return { canPlay: true, timeLeft: 0 };
+      } else {
+        const timeLeft = Math.ceil((quizState.timeoutUntil - Date.now()) / 1000);
+        return { canPlay: false, timeLeft };
+      }
+    }
+    return { canPlay: true, timeLeft: 0 };
+  } catch (error) {
+    console.error('Error checking quiz timeout:', error);
+    return { canPlay: true, timeLeft: 0 };
   }
 };

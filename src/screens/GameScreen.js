@@ -13,6 +13,7 @@ import { COLORS, GRADIENTS } from '../constants/colors';
 import { PuzzleGrid } from '../components/PuzzleGrid';
 import { StoryModal } from '../components/StoryModal';
 import { PuzzleFlipCard } from '../components/PuzzleFlipCard';
+import { GameOverModal } from '../components/GameOverModal';
 import {
   generatePuzzleTiles,
   isPuzzleSolved,
@@ -31,6 +32,7 @@ export const GameScreen = ({ route, navigation }) => {
   const [showFlipCard, setShowFlipCard] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [timer, setTimer] = useState(0);
+  const [showGameOver, setShowGameOver] = useState(false);
 
   const victoryScale = new Animated.Value(0);
 
@@ -70,7 +72,8 @@ export const GameScreen = ({ route, navigation }) => {
     if (isPuzzleSolved(newTiles)) {
       completeLevel();
     } else if (moveCount + 1 >= level.moves) {
-      showFailureAlert();
+      setShowGameOver(true);
+      setGameStarted(false);
     }
   };
 
@@ -97,29 +100,20 @@ export const GameScreen = ({ route, navigation }) => {
     }, 500);
   };
 
-  const showFailureAlert = () => {
-    Alert.alert(
-      'Out of Moves',
-      'You\'ve used all your moves! Try again?',
-      [
-        {
-          text: 'Retry',
-          onPress: initializeGame,
-        },
-        {
-          text: 'Back to Levels',
-          onPress: () => navigation.goBack(),
-        },
-      ]
-    );
-  };
+  
 
   const handleRestartLevel = () => {
     initializeGame();
   };
 
   const handleBackToLevels = () => {
+    setShowGameOver(false);
     navigation.goBack();
+  };
+
+  const handleRetryFromQuiz = () => {
+    setShowGameOver(false);
+    initializeGame();
   };
 
   const handleContinueFromStory = () => {
@@ -218,6 +212,17 @@ export const GameScreen = ({ route, navigation }) => {
         visible={showFlipCard}
         levelData={level}
         onClose={handleCloseFlipCard}
+      />
+
+      {/* Game Over Modal */}
+      <GameOverModal
+        visible={showGameOver}
+        onClose={() => setShowGameOver(false)}
+        onRetry={handleRetryFromQuiz}
+        onBackToLevels={handleBackToLevels}
+        levelTitle={level.title}
+        movesUsed={moveCount}
+        maxMoves={level.moves}
       />
     </LinearGradient>
   );

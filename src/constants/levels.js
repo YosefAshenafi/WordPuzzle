@@ -86,3 +86,70 @@ export const VERSES = [
 export const getRandomVerse = () => {
   return VERSES[Math.floor(Math.random() * VERSES.length)];
 };
+
+export const BIBLICAL_QUESTIONS = [
+  {
+    question: "Who built the ark?",
+    options: ["Abraham", "Noah", "Moses", "David"],
+    correctAnswer: 1,
+    reference: "Genesis 6:13-22"
+  },
+  {
+    question: "What was the first miracle Jesus performed?",
+    options: ["Walking on water", "Turning water into wine", "Healing the blind", "Raising Lazarus"],
+    correctAnswer: 1,
+    reference: "John 2:1-11"
+  },
+  {
+    question: "Who defeated Goliath?",
+    options: ["Saul", "Jonathan", "David", "Samuel"],
+    correctAnswer: 2,
+    reference: "1 Samuel 17"
+  },
+  {
+    question: "How many days did God take to create the world?",
+    options: ["5", "6", "7", "8"],
+    correctAnswer: 1,
+    reference: "Genesis 1"
+  },
+  {
+    question: "Who was thrown into the lions' den?",
+    options: ["Jeremiah", "Ezekiel", "Daniel", "Isaiah"],
+    correctAnswer: 2,
+    reference: "Daniel 6"
+  },
+  {
+    question: "What is the Golden Rule?",
+    options: ["Love your neighbor as yourself", "Honor your father and mother", "Keep the Sabbath holy", "You shall not steal"],
+    correctAnswer: 0,
+    reference: "Matthew 7:12"
+  },
+  {
+    question: "Who led the Israelites out of Egypt?",
+    options: ["Abraham", "Joseph", "Moses", "Joshua"],
+    correctAnswer: 2,
+    reference: "Exodus 3-14"
+  },
+  {
+    question: "What is the last book of the Bible?",
+    options: ["Revelation", "Jude", "3 John", "Malachi"],
+    correctAnswer: 0,
+    reference: "Revelation 1:1"
+  },
+  {
+    question: "How many disciples did Jesus have?",
+    options: ["7", "10", "12", "15"],
+    correctAnswer: 2,
+    reference: "Matthew 10:1-4"
+  },
+  {
+    question: "Who denied Jesus three times?",
+    options: ["Judas", "Peter", "John", "Thomas"],
+    correctAnswer: 1,
+    reference: "Matthew 26:69-75"
+  }
+];
+
+export const getRandomQuestion = () => {
+  return BIBLICAL_QUESTIONS[Math.floor(Math.random() * BIBLICAL_QUESTIONS.length)];
+};
