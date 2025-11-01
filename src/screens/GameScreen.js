@@ -21,11 +21,11 @@ import {
   isValidMove,
   debugShuffle,
 } from '../utils/puzzleLogic';
-import { saveProgress, saveLevelStats } from '../utils/storage';
+import { saveProgress, saveLevelStats, saveCurrentGameState, loadCurrentGameState, clearCurrentGameState } from '../utils/storage';
 import { playVictorySound, loadLevelSound, playLevelSound, stopLevelSound, isSoundEnabled } from '../utils/audio';
 
 export const GameScreen = ({ route, navigation }) => {
-  const { level } = route.params;
+  const { level, isContinue = false } = route.params;
   const [tiles, setTiles] = useState([]);
   const [moveCount, setMoveCount] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
@@ -43,7 +43,7 @@ export const GameScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     setRestartCount(0);
-    initializeGame();
+    initializeGame(isContinue);
     
     // Load sound setting
     isSoundEnabled().then(setSoundEnabled);
@@ -56,7 +56,7 @@ export const GameScreen = ({ route, navigation }) => {
         });
       }
     };
-  }, [level]);
+  }, [level, isContinue]);
 
   useEffect(() => {
     let interval;
@@ -68,12 +68,69 @@ export const GameScreen = ({ route, navigation }) => {
     return () => clearInterval(interval);
   }, [gameStarted, isComplete]);
 
-const initializeGame = () => {
+  // Auto-save game state when it changes
+  useEffect(() => {
+    if (gameStarted && !isComplete && tiles.length > 0) {
+      const gameState = {
+        tiles,
+        moveCount,
+        timer,
+        showHints,
+        hintsRemaining,
+        timestamp: Date.now()
+      };
+      saveCurrentGameState(level.id, gameState);
+    }
+  }, [tiles, moveCount, timer, showHints, hintsRemaining, gameStarted, isComplete]);
+
+  // Auto-save game state when it changes
+  useEffect(() => {
+    if (gameStarted && !isComplete && tiles.length > 0) {
+      const gameState = {
+        tiles,
+        moveCount,
+        timer,
+        showHints,
+        hintsRemaining,
+        timestamp: Date.now()
+      };
+      saveCurrentGameState(level.id, gameState);
+    }
+  }, [tiles, moveCount, timer, showHints, hintsRemaining, gameStarted, isComplete]);
+
+const initializeGame = (isContinue = false) => {
+    if (isContinue) {
+      // Try to load saved game state
+      loadCurrentGameState(level.id).then(savedState => {
+        if (savedState) {
+          // Restore saved state
+          setTiles(savedState.tiles);
+          setMoveCount(savedState.moveCount);
+          setTimer(savedState.timer);
+          setGameStarted(true);
+          setIsComplete(false);
+          setShowHints(savedState.showHints || false);
+          setHintsRemaining(savedState.hintsRemaining !== undefined ? savedState.hintsRemaining : 3);
+        } else {
+          // No saved state, start fresh
+          startFreshGame();
+        }
+      }).catch(error => {
+        console.log('Error loading saved state, starting fresh:', error);
+        startFreshGame();
+      });
+    } else {
+      // Start fresh game
+      startFreshGame();
+    }
+  };
+
+  const startFreshGame = () => {
     const newTiles = generatePuzzleTiles(level.gridSize, restartCount);
     setTiles(newTiles);
     setMoveCount(0);
     setTimer(0);
-    setGameStarted(true); // Set to true so the puzzle shows
+    setGameStarted(true); // Set to true so puzzle shows
     setIsComplete(false);
     setShowHints(false);
     setHintsRemaining(3);
@@ -125,6 +182,9 @@ const initializeGame = () => {
       completed: true,
     });
 
+    // Clear saved game state when completed
+    await clearCurrentGameState(level.id);
+
     await playVictorySound();
     setTimeout(() => {
       setShowFlipCard(true);
@@ -135,7 +195,9 @@ const initializeGame = () => {
 
   const handleRestartLevel = () => {
     setRestartCount(restartCount + 1);
-    initializeGame(); // This will handle the sound restart
+    // Clear saved state when restarting
+    clearCurrentGameState(level.id);
+    initializeGame(false); // Start fresh game
   };
 
   const handleBackToLevels = () => {

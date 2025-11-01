@@ -12,7 +12,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, GRADIENTS } from '../constants/colors';
 import { getRandomVerse, LEVELS } from '../constants/levels';
-import { getProgress, getAllStats } from '../utils/storage';
+import { getProgress, getAllStats, loadCurrentGameState } from '../utils/storage';
 
 const { width, height } = Dimensions.get('window');
 
@@ -56,15 +56,21 @@ export const HomeScreen = ({ navigation }) => {
     
     if (completed === 0) {
       // No levels completed, go to first level
-      navigation.navigate('Game', { level: LEVELS[0] });
+      navigation.navigate('Game', { level: LEVELS[0], isContinue: false });
     } else {
-      // Find the next incomplete level
-      const nextLevelId = completed + 1;
-      if (nextLevelId <= LEVELS.length) {
-        navigation.navigate('Game', { level: LEVELS[nextLevelId - 1] });
+      // Find the current incomplete level (could be in progress)
+      const currentLevelId = Math.min(completed + 1, LEVELS.length);
+      const currentLevel = LEVELS[currentLevelId - 1];
+      
+      // Check if there's a saved game state for this level
+      const savedState = await loadCurrentGameState(currentLevel.id);
+      
+      if (savedState) {
+        // Has saved state, continue from where left off
+        navigation.navigate('Game', { level: currentLevel, isContinue: true });
       } else {
-        // All levels completed, go to level selection
-        navigation.navigate('Levels');
+        // No saved state, start fresh
+        navigation.navigate('Game', { level: currentLevel, isContinue: false });
       }
     }
   } catch (error) {

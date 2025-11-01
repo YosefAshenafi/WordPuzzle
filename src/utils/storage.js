@@ -121,3 +121,39 @@ export const checkQuizTimeout = async () => {
     return { canPlay: true, timeLeft: 0 };
   }
 };
+
+// Save current game state
+export const saveCurrentGameState = async (levelId, gameState) => {
+  try {
+    const key = `@biblepuzzlequest_currentgame_${levelId}`;
+    await AsyncStorage.setItem(key, JSON.stringify(gameState));
+    return true;
+  } catch (error) {
+    console.error('Error saving current game state:', error);
+    return false;
+  }
+};
+
+// Load current game state
+export const loadCurrentGameState = async (levelId) => {
+  try {
+    const key = `@biblepuzzlequest_currentgame_${levelId}`;
+    const data = await AsyncStorage.getItem(key);
+    return data ? JSON.parse(data) : null;
+  } catch (error) {
+    console.error('Error loading current game state:', error);
+    return null;
+  }
+};
+
+// Clear current game state
+export const clearCurrentGameState = async (levelId) => {
+  try {
+    const key = `@biblepuzzlequest_currentgame_${levelId}`;
+    await AsyncStorage.removeItem(key);
+    return true;
+  } catch (error) {
+    console.error('Error clearing current game state:', error);
+    return false;
+  }
+};
