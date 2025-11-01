@@ -11,7 +11,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { COLORS } from '../constants/colors';
+import { COLORS, GRADIENTS } from '../constants/colors';
 
 const { width, height } = Dimensions.get('window');
 
@@ -96,9 +96,17 @@ export const PuzzleFlipCard = ({ visible, levelData, onClose }) => {
             {/* Front of card - Puzzle Image */}
             <Animated.View style={[styles.cardFace, { opacity: frontOpacity }]}>
               <LinearGradient
-                colors={[COLORS.gold, COLORS.primary]}
+                colors={GRADIENTS.secondary}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
                 style={styles.gradient}
               >
+                {/* Background decorative circles */}
+                <View style={styles.backgroundDecor}>
+                  <View style={[styles.decorCircle, styles.circle1]} />
+                  <View style={[styles.decorCircle, styles.circle2]} />
+                  <View style={[styles.decorCircle, styles.circle3]} />
+                </View>
                 <View style={styles.imageContainer}>
                   <Image
                     source={typeof levelData.image === 'string' ? { uri: levelData.image } : levelData.image}
@@ -116,9 +124,17 @@ export const PuzzleFlipCard = ({ visible, levelData, onClose }) => {
             {/* Back of card - Bible Story */}
             <Animated.View style={[styles.cardFace, styles.cardBack, { opacity: backOpacity }]}>
               <LinearGradient
-                colors={[COLORS.primary, COLORS.secondary]}
+                colors={GRADIENTS.secondary}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
                 style={styles.gradient}
               >
+                {/* Background decorative circles */}
+                <View style={styles.backgroundDecor}>
+                  <View style={[styles.decorCircle, styles.circle1]} />
+                  <View style={[styles.decorCircle, styles.circle2]} />
+                  <View style={[styles.decorCircle, styles.circle3]} />
+                </View>
                 <View style={styles.storyContainer}>
                   <View style={styles.storyHeader}>
                     <Text style={styles.storyTitle}>{levelData.title}</Text>
@@ -137,7 +153,14 @@ export const PuzzleFlipCard = ({ visible, levelData, onClose }) => {
                     onPress={handleClose}
                     activeOpacity={0.8}
                   >
-                    <Text style={styles.closeButtonText}>Close</Text>
+                    <LinearGradient
+                      colors={COLORS.gold ? [COLORS.gold, '#D97706'] : [COLORS.primary, COLORS.secondary]}
+                      style={styles.buttonGradient}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 1 }}
+                    >
+                      <Text style={styles.closeButtonText}>Close</Text>
+                    </LinearGradient>
                   </TouchableOpacity>
                 </View>
               </LinearGradient>
@@ -188,6 +211,39 @@ const styles = StyleSheet.create({
   },
   gradient: {
     flex: 1,
+  },
+  backgroundDecor: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  decorCircle: {
+    position: 'absolute',
+    borderRadius: width * 0.4,
+    opacity: 0.1,
+  },
+  circle1: {
+    width: width * 0.8,
+    height: width * 0.8,
+    top: -width * 0.2,
+    right: -width * 0.2,
+    backgroundColor: COLORS.white,
+  },
+  circle2: {
+    width: width * 0.6,
+    height: width * 0.6,
+    bottom: height * 0.3,
+    left: -width * 0.1,
+    backgroundColor: COLORS.gold,
+  },
+  circle3: {
+    width: width * 0.4,
+    height: width * 0.4,
+    top: height * 0.4,
+    right: width * 0.1,
+    backgroundColor: COLORS.accent,
   },
   imageContainer: {
     flex: 1,
@@ -262,18 +318,19 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
   },
   closeButton: {
-    backgroundColor: COLORS.gold,
-    paddingVertical: 14,
-    paddingHorizontal: 40,
-    borderRadius: 12,
-    alignItems: 'center',
-    alignSelf: 'center',
+    borderRadius: 16,
+    overflow: 'hidden',
     shadowColor: COLORS.gold,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    elevation: 8,
     marginTop: 10,
+  },
+  buttonGradient: {
+    paddingVertical: 18,
+    paddingHorizontal: 40,
+    alignItems: 'center',
   },
   closeButtonText: {
     fontSize: 18,

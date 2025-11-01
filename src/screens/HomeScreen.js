@@ -98,18 +98,23 @@ const loadProgress = async () => {
         gamesCount++;
         
         // Track best records
-        if (stat.timeTaken && (bestTimeValue === null || stat.timeTaken < bestTimeValue)) {
-          bestTimeValue = stat.timeTaken;
+        if (stat.time && (bestTimeValue === null || stat.time < bestTimeValue)) {
+          bestTimeValue = stat.time;
         }
-        if (stat.movesUsed !== undefined && (bestMovesValue === null || stat.movesUsed < bestMovesValue)) {
-          bestMovesValue = stat.movesUsed;
+        if (stat.moves !== undefined && (bestMovesValue === null || stat.moves < bestMovesValue)) {
+          bestMovesValue = stat.moves;
         }
         
         // Track most recent completed game
         if (stat.timestamp && stat.timestamp > latestTimestamp) {
           latestTimestamp = stat.timestamp;
-          latestCompletedTime = stat.timeTaken;
-          latestCompletedMoves = stat.movesUsed;
+          latestCompletedTime = stat.time;
+          latestCompletedMoves = stat.moves;
+        } else if (!latestTimestamp && stat.completed) {
+          // Fallback for games without timestamp (backward compatibility)
+          latestTimestamp = Date.now(); // Use current time as fallback
+          latestCompletedTime = stat.time;
+          latestCompletedMoves = stat.moves;
         }
       }
     });
@@ -122,6 +127,10 @@ const loadProgress = async () => {
     if (gamesCount > 0) {
       setCurrentTime(latestCompletedTime);
       setCurrentMoves(latestCompletedMoves);
+    } else {
+      // No games completed, set to null to avoid showing zeros
+      setCurrentTime(null);
+      setCurrentMoves(null);
     }
   };
 
@@ -183,7 +192,7 @@ const loadProgress = async () => {
             </View>
           </Animated.View>
 
-          {/* Achievement Records */}
+{/* Achievement Records */}
           <Animated.View style={[styles.achievementContainer, { opacity: subtitle2Op }]}>
             <View style={styles.achievementCard}>
               <View style={styles.achievementHeader}>
@@ -198,12 +207,15 @@ const loadProgress = async () => {
                     <View style={styles.currentGameStats}>
                       <View style={styles.currentGameItem}>
                         <Text style={styles.currentGameIcon}>⏱️</Text>
-                        <Text style={styles.currentGameValue}>{formatTime(currentTime)}</Text>
+                        <Text style={styles.currentGameValue}>
+                          {currentTime !== null ? formatTime(currentTime) : '--:--'}
+                        </Text>
                       </View>
                       <View style={styles.currentGameDivider} />
                       <View style={styles.currentGameItem}>
-                        <Text style={styles.currentGameIcon}>🎯</Text>
-                        <Text style={styles.currentGameValue}>{currentMoves} moves</Text>
+                        <Text style={styles.currentGameValue}>
+                          {currentMoves !== null ? `${currentMoves} moves` : '-- moves'}
+                        </Text>
                       </View>
                     </View>
                   </View>
@@ -236,14 +248,6 @@ const loadProgress = async () => {
                             {bestMoves}
                             {currentMoves === bestMoves && ' 🏆'}
                           </Text>
-                        </View>
-                      </View>
-                      <View style={styles.bestRecordDivider} />
-                      <View style={styles.bestRecordItem}>
-                        <Text style={styles.bestRecordIcon}>🎮</Text>
-                        <View style={styles.bestRecordInfo}>
-                          <Text style={styles.bestRecordLabel}>Won</Text>
-                          <Text style={styles.bestRecordValue}>{totalGames}</Text>
                         </View>
                       </View>
                     </View>

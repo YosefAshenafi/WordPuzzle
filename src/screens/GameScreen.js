@@ -126,7 +126,7 @@ const initializeGame = (isContinue = false) => {
   };
 
   const startFreshGame = () => {
-    const newTiles = generatePuzzleTiles(level.gridSize, restartCount);
+    const newTiles = generatePuzzleTiles(level.gridSize, restartCount, level.id);
     setTiles(newTiles);
     setMoveCount(0);
     setTimer(0);
@@ -180,6 +180,7 @@ const initializeGame = (isContinue = false) => {
       moves: moveCount,
       time: timer,
       completed: true,
+      timestamp: Date.now(),
     });
 
     // Clear saved game state when completed

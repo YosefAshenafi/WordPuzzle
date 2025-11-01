@@ -45,7 +45,7 @@ export const LEVELS = [
     bibleRef: 'Genesis 6-9',
     image: images['noah-ark'],
     story: `God saw that the earth was filled with wickedness and decided to send a great flood. He commanded Noah, a righteous man, to build an ark and bring two of every kind of animal into it, along with his family. For 40 days and 40 nights, rain fell upon the earth. When the waters receded, the ark rested on the mountains of Ararat. God made a covenant with Noah, placing a rainbow in the sky as a sign that He would never destroy the earth by flood again.`,
-    moves: 55,
+    moves: 50,
     gridSize: 4,
   },
   {
@@ -54,8 +54,8 @@ export const LEVELS = [
     bibleRef: '1 Samuel 17',
     image: images['david-goliath'],
     story: `The giant Goliath challenged the Israelites to send a champion to fight him. All the soldiers were afraid, but young David, a shepherd boy, accepted the challenge. Armed only with his sling and five smooth stones, David faced the mighty Goliath. With faith in God, David hurled a stone that struck Goliath in the forehead, and the giant fell. David's courage and trust in the Lord showed that size and strength are nothing compared to faith in God.`,
-    moves: 60,
-    gridSize: 5,
+    moves: 50,
+    gridSize: 4,
   },
   {
     id: 4,

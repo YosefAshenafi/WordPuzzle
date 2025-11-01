@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import * as SplashScreen from 'expo-splash-screen';
 import { RootNavigator } from './src/navigation/RootNavigator';
+import { CustomSplashScreen } from './src/components/CustomSplashScreen';
 import { initAudio } from './src/utils/audio';
 
-// Keep the splash screen visible while we fetch resources
-SplashScreen.preventAutoHideAsync();
-
 export default function App() {
+  const [showSplash, setShowSplash] = useState(true);
   const [appIsReady, setAppIsReady] = useState(false);
 
   useEffect(() => {
@@ -19,7 +17,7 @@ export default function App() {
 
         // You can add other initialization here
         // For example, loading fonts, etc.
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 500));
       } catch (e) {
         console.warn(e);
       } finally {
@@ -30,14 +28,12 @@ export default function App() {
     prepare();
   }, []);
 
-  useEffect(() => {
-    if (appIsReady) {
-      SplashScreen.hideAsync();
-    }
-  }, [appIsReady]);
+  const handleSplashAnimationComplete = () => {
+    setShowSplash(false);
+  };
 
-  if (!appIsReady) {
-    return null;
+  if (showSplash || !appIsReady) {
+    return <CustomSplashScreen onAnimationComplete={handleSplashAnimationComplete} />;
   }
 
   return (

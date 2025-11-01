@@ -188,9 +188,17 @@ export const GameOverModal = ({
             blurRadius={3}
           >
             <LinearGradient
-              colors={['rgba(15, 23, 42, 0.95)', 'rgba(30, 41, 59, 0.95)', 'rgba(51, 65, 85, 0.95)']}
+              colors={GRADIENTS.secondary}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
               style={styles.gradientOverlay}
             >
+              {/* Background decorative circles */}
+              <View style={styles.backgroundDecor}>
+                <View style={[styles.decorCircle, styles.circle1]} />
+                <View style={[styles.decorCircle, styles.circle2]} />
+                <View style={[styles.decorCircle, styles.circle3]} />
+              </View>
               {!showQuiz ? (
                 // Game Over Screen
                 <View style={styles.content}>
@@ -350,7 +358,7 @@ export const GameOverModal = ({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -374,6 +382,39 @@ const styles = StyleSheet.create({
   gradientOverlay: {
     flex: 1,
     padding: 20,
+  },
+  backgroundDecor: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  decorCircle: {
+    position: 'absolute',
+    borderRadius: width * 0.4,
+    opacity: 0.1,
+  },
+  circle1: {
+    width: width * 0.8,
+    height: width * 0.8,
+    top: -width * 0.2,
+    right: -width * 0.2,
+    backgroundColor: COLORS.white,
+  },
+  circle2: {
+    width: width * 0.6,
+    height: width * 0.6,
+    bottom: height * 0.3,
+    left: -width * 0.1,
+    backgroundColor: COLORS.gold,
+  },
+  circle3: {
+    width: width * 0.4,
+    height: width * 0.4,
+    top: height * 0.4,
+    right: width * 0.1,
+    backgroundColor: COLORS.accent,
   },
   content: {
     flex: 1,
@@ -407,12 +448,12 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   statBox: {
-    backgroundColor: COLORS.darker + '40',
+    backgroundColor: COLORS.white + '15',
     padding: 20,
     borderRadius: 16,
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: COLORS.gold + '40',
+    borderWidth: 1,
+    borderColor: COLORS.white + '20',
     flex: 1,
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 4 },
@@ -435,13 +476,18 @@ const styles = StyleSheet.create({
     textShadowRadius: 2,
   },
   messageContainer: {
-    backgroundColor: COLORS.darker + '30',
+    backgroundColor: COLORS.white + '15',
     padding: 24,
     borderRadius: 20,
     marginBottom: 24,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: COLORS.gold + '20',
+    borderColor: COLORS.white + '20',
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
   },
   messageText: {
     fontSize: 18,
@@ -486,8 +532,8 @@ const styles = StyleSheet.create({
     textShadowRadius: 2,
   },
   backButton: {
-    backgroundColor: COLORS.darker + '60',
-    paddingVertical: 16,
+    backgroundColor: COLORS.white + '20',
+    paddingVertical: 18,
     paddingHorizontal: 20,
     borderRadius: 16,
     alignItems: 'center',
@@ -533,7 +579,7 @@ const styles = StyleSheet.create({
   timerBackground: {
     width: '100%',
     height: 8,
-    backgroundColor: COLORS.darker,
+    backgroundColor: COLORS.white + '20',
     borderRadius: 4,
     overflow: 'hidden',
   },
@@ -549,12 +595,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   questionCard: {
-    backgroundColor: COLORS.darker + '40',
+    backgroundColor: COLORS.white + '15',
     borderRadius: 16,
     padding: 20,
     marginBottom: 20,
-    borderWidth: 2,
-    borderColor: COLORS.gold + '30',
+    borderWidth: 1,
+    borderColor: COLORS.white + '20',
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
   },
   question: {
     fontSize: 18,
@@ -575,11 +626,16 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   answerButton: {
-    backgroundColor: COLORS.darker + '60',
+    backgroundColor: COLORS.white + '20',
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: COLORS.gold + '40',
+    borderColor: COLORS.white + '40',
     overflow: 'hidden',
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
   },
   answerContent: {
     flexDirection: 'row',

@@ -7,9 +7,12 @@ import {
   TouchableOpacity,
   Modal,
   Animated,
+  Dimensions,
 } from 'react-native';
-import { COLORS } from '../constants/colors';
+import { COLORS, GRADIENTS } from '../constants/colors';
 import { LinearGradient } from 'expo-linear-gradient';
+
+const { width, height } = Dimensions.get('window');
 
 export const StoryModal = ({ visible, levelData, onClose, onContinue }) => {
   const [opacity] = useState(new Animated.Value(0));
@@ -36,11 +39,17 @@ export const StoryModal = ({ visible, levelData, onClose, onContinue }) => {
       <Animated.View style={[styles.overlay, { opacity }]}>
         <Animated.View style={[styles.container, { transform: [{ scale }] }]}>
           <LinearGradient
-            colors={[COLORS.primary, COLORS.secondary]}
+            colors={GRADIENTS.secondary}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.gradient}
           >
+            {/* Background decorative circles */}
+            <View style={styles.backgroundDecor}>
+              <View style={[styles.decorCircle, styles.circle1]} />
+              <View style={[styles.decorCircle, styles.circle2]} />
+              <View style={[styles.decorCircle, styles.circle3]} />
+            </View>
             <View style={styles.content}>
               <View style={styles.header}>
                 <Text style={styles.title}>✨ You've Unlocked ✨</Text>
@@ -66,9 +75,16 @@ export const StoryModal = ({ visible, levelData, onClose, onContinue }) => {
                 <TouchableOpacity
                   style={styles.continueButton}
                   onPress={onContinue}
-                  activeOpacity={0.7}
+                  activeOpacity={0.8}
                 >
-                  <Text style={styles.continueText}>Continue</Text>
+                  <LinearGradient
+                    colors={COLORS.gold ? [COLORS.gold, '#D97706'] : [COLORS.primary, COLORS.secondary]}
+                    style={styles.buttonGradient}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                  >
+                    <Text style={styles.continueText}>Continue</Text>
+                  </LinearGradient>
                 </TouchableOpacity>
               </View>
             </View>
@@ -82,7 +98,7 @@ export const StoryModal = ({ visible, levelData, onClose, onContinue }) => {
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: COLORS.darker + 'CC',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -100,6 +116,39 @@ const styles = StyleSheet.create({
   gradient: {
     flex: 1,
     padding: 24,
+  },
+  backgroundDecor: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  decorCircle: {
+    position: 'absolute',
+    borderRadius: width * 0.4,
+    opacity: 0.1,
+  },
+  circle1: {
+    width: width * 0.8,
+    height: width * 0.8,
+    top: -width * 0.2,
+    right: -width * 0.2,
+    backgroundColor: COLORS.white,
+  },
+  circle2: {
+    width: width * 0.6,
+    height: width * 0.6,
+    bottom: height * 0.3,
+    left: -width * 0.1,
+    backgroundColor: COLORS.gold,
+  },
+  circle3: {
+    width: width * 0.4,
+    height: width * 0.4,
+    top: height * 0.4,
+    right: width * 0.1,
+    backgroundColor: COLORS.accent,
   },
   content: {
     flex: 1,
@@ -144,22 +193,33 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     flex: 1,
-    paddingVertical: 12,
+    paddingVertical: 18,
     paddingHorizontal: 16,
     backgroundColor: COLORS.white + '20',
-    borderRadius: 10,
+    borderRadius: 16,
     borderWidth: 2,
-    borderColor: COLORS.white,
+    borderColor: COLORS.white + '40',
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
   },
   continueButton: {
     flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    backgroundColor: COLORS.gold,
-    borderRadius: 10,
-    justifyContent: 'center',
+    borderRadius: 16,
+    overflow: 'hidden',
+    shadowColor: COLORS.gold,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  buttonGradient: {
+    paddingVertical: 18,
+    paddingHorizontal: 32,
     alignItems: 'center',
   },
   buttonText: {

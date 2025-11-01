@@ -15,7 +15,7 @@ const shuffle = (array) => {
 };
 
 // Generate puzzle tiles from image with difficulty-based shuffling
-export const generatePuzzleTiles = (gridSize, restartCount = 0) => {
+export const generatePuzzleTiles = (gridSize, restartCount = 0, levelId = 1) => {
   const totalTiles = gridSize * gridSize;
   const tiles = Array.from({ length: totalTiles - 1 }, (_, i) => ({
     id: i,
@@ -34,22 +34,26 @@ export const generatePuzzleTiles = (gridSize, restartCount = 0) => {
   
   let shuffledTiles;
   
-  // Apply difficulty-based shuffling
-  if (restartCount === 1) {
-    // First restart: make it difficult (more shuffles)
-    shuffledTiles = shuffleWithDifficulty(tiles, 'hard');
-  } else if (restartCount === 3) {
-    // Third restart: make it super simple (fewer shuffles)
-    shuffledTiles = shuffleWithDifficulty(tiles, 'easy');
-  } else {
-    // Default: random shuffle
+  // Apply difficulty-based shuffling based on level and restart count
+  if (levelId <= 3) {
+    // First 3 levels: always very easy (solvable in ~5 moves)
+    shuffledTiles = shuffleWithDifficulty(tiles, 'very_easy');
+  } else if (restartCount === 0) {
+    // Later levels, first attempt: normal difficulty
     shuffledTiles = shuffle(tiles);
+  } else {
+    // Later levels, any restart: make it DIFFICULT with lots of shuffling!
+    shuffledTiles = shuffleWithDifficulty(tiles, 'hard');
   }
   
   // Ensure puzzle is not solved (rare edge case)
   if (isPuzzleSolved(shuffledTiles)) {
     // If somehow solved, do one more shuffle
-    shuffledTiles = restartCount === 3 ? shuffleWithDifficulty(shuffledTiles, 'easy') : shuffle(shuffledTiles);
+    if (levelId <= 3) {
+      shuffledTiles = shuffleWithDifficulty(shuffledTiles, 'very_easy');
+    } else {
+      shuffledTiles = shuffle(shuffledTiles);
+    }
   }
   
   return shuffledTiles;
@@ -61,7 +65,25 @@ const shuffleWithDifficulty = (tiles, difficulty) => {
   const totalTiles = arr.length;
   const gridSize = Math.sqrt(totalTiles);
   
-  if (difficulty === 'hard') {
+  if (difficulty === 'very_easy') {
+    // Very Easy: Extremely minimal shuffling - solvable in ~5 moves
+    let shuffleCount = 3; // Fixed 3 moves from solved state
+    for (let i = 0; i < shuffleCount; i++) {
+      const emptyTileIndex = arr.findIndex(tile => tile.isEmpty);
+      const emptyTile = arr[emptyTileIndex];
+      const adjacentPositions = getValidAdjacentPositions(emptyTile.position, gridSize);
+      
+      if (adjacentPositions.length > 0) {
+        const randomPosition = adjacentPositions[Math.floor(Math.random() * adjacentPositions.length)];
+        const tileToSwapIndex = arr.findIndex(tile => tile.position === randomPosition);
+        
+        // Swap positions
+        const tempPosition = emptyTile.position;
+        arr[emptyTileIndex].position = randomPosition;
+        arr[tileToSwapIndex].position = tempPosition;
+      }
+    }
+  } else if (difficulty === 'hard') {
     // Hard: Maximum shuffling - ensure it's solvable but very scrambled
     let shuffleCount = Math.min(100, totalTiles * 3); // Lots of valid moves
     for (let i = 0; i < shuffleCount; i++) {
