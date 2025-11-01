@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, GRADIENTS } from '../constants/colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PuzzleGrid } from '../components/PuzzleGrid';
 import { StoryModal } from '../components/StoryModal';
 import { PuzzleFlipCard } from '../components/PuzzleFlipCard';
@@ -21,7 +22,7 @@ import {
   debugShuffle,
 } from '../utils/puzzleLogic';
 import { saveProgress, saveLevelStats } from '../utils/storage';
-import { playVictorySound, loadLevelSound, playLevelSound, stopLevelSound } from '../utils/audio';
+import { playVictorySound, loadLevelSound, playLevelSound, stopLevelSound, isSoundEnabled } from '../utils/audio';
 
 export const GameScreen = ({ route, navigation }) => {
   const { level } = route.params;
@@ -36,12 +37,16 @@ export const GameScreen = ({ route, navigation }) => {
   const [restartCount, setRestartCount] = useState(0);
   const [showHints, setShowHints] = useState(false);
   const [hintsRemaining, setHintsRemaining] = useState(3);
+  const [soundEnabled, setSoundEnabled] = useState(true);
 
   const victoryScale = new Animated.Value(0);
 
   useEffect(() => {
     setRestartCount(0);
     initializeGame();
+    
+    // Load sound setting
+    isSoundEnabled().then(setSoundEnabled);
     
     return () => {
       // Stop level sound when leaving - cleanup will be handled by stopLevelSound
@@ -138,6 +143,27 @@ const initializeGame = () => {
     navigation.goBack();
   };
 
+  const toggleSound = async () => {
+    const newSoundState = !soundEnabled;
+    setSoundEnabled(newSoundState);
+    
+    // Save to storage
+    try {
+      await AsyncStorage.setItem('@biblepuzzlequest_sound_enabled', newSoundState.toString());
+    } catch (error) {
+      console.error('Error saving sound setting:', error);
+    }
+    
+    // Stop sound if muting, play if unmuting
+    if (level.sound) {
+      if (newSoundState) {
+        playLevelSound(level.sound);
+      } else {
+        stopLevelSound(level.sound);
+      }
+    }
+  };
+
   const handleRetryFromQuiz = () => {
     setShowGameOver(false);
     setRestartCount(restartCount + 1);
@@ -198,8 +224,18 @@ const initializeGame = () => {
             <Text style={styles.levelTitle}>{level.title}</Text>
             <Text style={styles.levelRef}>{level.bibleRef}</Text>
           </View>
-          <View style={styles.timerBox}>
-            <Text style={styles.timerText}>{formatTime(timer)}</Text>
+          <View style={styles.headerRight}>
+            <TouchableOpacity
+              style={styles.soundButton}
+              onPress={toggleSound}
+              activeOpacity={0.7}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <Text style={styles.soundIcon}>{soundEnabled ? '🔊' : '🔇'}</Text>
+            </TouchableOpacity>
+            <View style={styles.timerBox}>
+              <Text style={styles.timerText}>{formatTime(timer)}</Text>
+            </View>
           </View>
         </View>
 
@@ -306,6 +342,26 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.light,
     fontStyle: 'italic',
+  },
+  headerRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  soundButton: {
+    backgroundColor: COLORS.white + '20',
+    borderRadius: 20,
+    padding: 8,
+    borderWidth: 2,
+    borderColor: COLORS.gold + '40',
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  soundIcon: {
+    fontSize: 18,
   },
   timerBox: {
     backgroundColor: COLORS.gold,
