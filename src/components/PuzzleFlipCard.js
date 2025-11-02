@@ -13,10 +13,12 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, GRADIENTS } from '../constants/colors';
 import Confetti from 'react-native-confetti-view';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const { width, height } = Dimensions.get('window');
 
 export const PuzzleFlipCard = ({ visible, levelData, onClose, moveCount, timeTaken }) => {
+  const { t } = useLanguage();
   const [flipAnimation] = useState(new Animated.Value(0));
   const [contentOpacity] = useState(new Animated.Value(0));
   const [showConfetti, setShowConfetti] = useState(false);
@@ -127,14 +129,14 @@ export const PuzzleFlipCard = ({ visible, levelData, onClose, moveCount, timeTak
                     style={styles.puzzleImage}
                     resizeMode="cover"
                   />
-                   <View style={styles.imageOverlay}>
-                     <Text style={styles.congratulationsText}>🎉 Puzzle Completed! 🎉</Text>
-                     <View style={styles.statsContainer}>
-                       <Text style={styles.statsText}>⏱️ {formatTime(timeTaken || 0)}</Text>
-                       <Text style={styles.statsText}>🎯 {moveCount || 0} moves</Text>
-                     </View>
-                     <Text style={styles.flipHint}>Tap to reveal story</Text>
-                   </View>
+                    <View style={styles.imageOverlay}>
+                      <Text style={styles.congratulationsText}>🎉 {t('flipCard.puzzleCompleted')} 🎉</Text>
+                      <View style={styles.statsContainer}>
+                        <Text style={styles.statsText}>⏱️ {formatTime(timeTaken || 0)}</Text>
+                        <Text style={styles.statsText}>🎯 {moveCount || 0} {t('flipCard.moves')}</Text>
+                      </View>
+                      <Text style={styles.flipHint}>{t('flipCard.tapToReveal')}</Text>
+                    </View>
                 </View>
               </LinearGradient>
             </Animated.View>
@@ -171,14 +173,14 @@ export const PuzzleFlipCard = ({ visible, levelData, onClose, moveCount, timeTak
                     onPress={handleClose}
                     activeOpacity={0.8}
                   >
-                    <LinearGradient
-                      colors={COLORS.gold ? [COLORS.gold, '#D97706'] : [COLORS.primary, COLORS.secondary]}
-                      style={styles.buttonGradient}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 1 }}
-                    >
-                      <Text style={styles.closeButtonText}>Close</Text>
-                    </LinearGradient>
+                     <LinearGradient
+                       colors={COLORS.gold ? [COLORS.gold, '#D97706'] : [COLORS.primary, COLORS.secondary]}
+                       style={styles.buttonGradient}
+                       start={{ x: 0, y: 0 }}
+                       end={{ x: 1, y: 1 }}
+                     >
+                       <Text style={styles.closeButtonText}>{t('flipCard.close')}</Text>
+                     </LinearGradient>
 </TouchableOpacity>
                 </View>
               </LinearGradient>

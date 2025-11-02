@@ -10,6 +10,7 @@ import {
   Modal,
 } from 'react-native';
 import { COLORS } from '../constants/colors';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const { width } = Dimensions.get('window');
 
@@ -23,6 +24,7 @@ export const PuzzleGrid = ({
   restartCount,
   imageUrl,
 }) => {
+  const { t } = useLanguage();
 
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
@@ -49,15 +51,15 @@ export const PuzzleGrid = ({
     <View style={styles.container}>
       <View style={styles.statsContainer}>
         <View style={styles.statBox}>
-          <Text style={styles.statLabel}>Try</Text>
+          <Text style={styles.statLabel}>{t('puzzle.try')}</Text>
           <Text style={styles.statValue}>{restartCount}</Text>
         </View>
         <View style={styles.statBox}>
-          <Text style={styles.statLabel}>Limit</Text>
+          <Text style={styles.statLabel}>{t('puzzle.limit')}</Text>
           <Text style={styles.statValue}>{maxMoves}</Text>
         </View>
         <View style={styles.statBox}>
-          <Text style={styles.statLabel}>Remaining</Text>
+          <Text style={styles.statLabel}>{t('puzzle.remaining')}</Text>
           <Text style={[
             styles.statValue,
             { color: moveCount > maxMoves ? COLORS.error : COLORS.success }
@@ -122,7 +124,7 @@ export const PuzzleGrid = ({
                 onPress={() => setShowPreviewModal(false)}
                 activeOpacity={0.8}
               >
-                <Text style={styles.closeButtonText}>✕ Close</Text>
+                <Text style={styles.closeButtonText}>✕ {t('puzzle.close')}</Text>
               </TouchableOpacity>
             </View>
           </TouchableOpacity>

@@ -15,8 +15,10 @@ import { LevelCard } from '../components/LevelCard';
 import { QuizModal } from '../components/QuizModal';
 import { getProgress } from '../utils/storage';
 import { stopAllLevelSounds } from '../utils/audio';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export const LevelSelectionScreen = ({ navigation }) => {
+  const { t } = useLanguage();
   const [progress, setProgress] = useState({});
   const [loading, setLoading] = useState(true);
   const [showQuiz, setShowQuiz] = useState(false);
@@ -55,11 +57,11 @@ export const LevelSelectionScreen = ({ navigation }) => {
   const handleCorrectAnswer = () => {
     setShowQuiz(false);
     Alert.alert(
-      '🎉 Wisdom Granted!',
-      'You have answered correctly! Your quest continues with a fresh start.',
+      t('levelSelection.wisdomGranted'),
+      t('levelSelection.correctAnswerMessage'),
       [
         {
-          text: 'Begin New Quest',
+          text: t('levelSelection.beginNewQuest'),
           onPress: () => {
             // Reset progress and start fresh
             navigation.reset({
@@ -99,7 +101,7 @@ const handleSelectLevel = (level) => {
           >
             <Text style={styles.homeButton}>🏠</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Choose Your Quest</Text>
+          <Text style={styles.headerTitle}>{t('levelSelection.chooseYourQuest')}</Text>
           <View style={styles.progressBadge}>
             <Text style={styles.progressText}>{completedCount}/6</Text>
           </View>
@@ -122,26 +124,26 @@ const handleSelectLevel = (level) => {
             ))}
           </View>
 
-          {completedCount === 6 && (
+{completedCount === 6 && (
             <View style={styles.completionMessage}>
-              <Text style={styles.completionTitle}>🎉 Quest Complete! 🎉</Text>
+              <Text style={styles.completionTitle}>{t('levelSelection.questComplete')}</Text>
               <Text style={styles.completionText}>
-                You've unlocked all the sacred stories!
+                {t('levelSelection.unlockedAllStories')}
               </Text>
               <Text style={styles.challengeText}>
-                ⚡ Answer the biblical question to continue your journey
+                {t('levelSelection.answerBiblicalQuestion')}
               </Text>
               <TouchableOpacity
                 style={styles.quizButton}
                 onPress={() => setShowQuiz(true)}
               >
-                <Text style={styles.quizButtonText}>📖 Face Divine Challenge</Text>
+                <Text style={styles.quizButtonText}>{t('levelSelection.faceDivineChallenge')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.replayButton}
                 onPress={() => navigation.navigate('Home')}
               >
-                <Text style={styles.replayButtonText}>Return Home</Text>
+                <Text style={styles.replayButtonText}>{t('levelSelection.returnHome')}</Text>
               </TouchableOpacity>
             </View>
           )}

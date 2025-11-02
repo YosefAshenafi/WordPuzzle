@@ -7,6 +7,7 @@ import { RootNavigator } from './src/navigation/RootNavigator';
 import { CustomSplashScreen } from './src/components/CustomSplashScreen';
 import { initAudio, stopAllLevelSounds } from './src/utils/audio';
 import { AppState } from 'react-native';
+import { LanguageProvider } from './src/contexts/LanguageContext';
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -59,8 +60,10 @@ export default function App() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <RootNavigator />
-      <StatusBar barStyle="light-content" />
+      <LanguageProvider>
+        <RootNavigator />
+        <StatusBar barStyle="light-content" />
+      </LanguageProvider>
     </GestureHandlerRootView>
   );
 }

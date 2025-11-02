@@ -30,9 +30,11 @@ import { saveProgress, saveLevelStats, saveCurrentGameState, loadCurrentGameStat
 import { playVictorySound, loadLevelSound, playLevelSound, stopLevelSound, stopAllLevelSounds, isSoundEnabled } from '../utils/audio';
 import { useAuth } from '../contexts/AuthContext';
 import { LeaderboardService } from '../services/leaderboardService';
+import { useLanguage } from '../contexts/LanguageContext';
 import Confetti from 'react-native-confetti-view';
 
 export const GameScreen = ({ route, navigation }) => {
+  const { t } = useLanguage();
   const { level, isContinue = false } = route.params || {};
   
   // Safety check for level with default values
@@ -54,7 +56,7 @@ export const GameScreen = ({ route, navigation }) => {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#0F172A'}}>
         <Text style={{color: '#F59E0B', fontSize: 18, fontWeight: 'bold'}}>
-          Loading level data...
+          {t('game.loadingLevel')}
         </Text>
       </View>
     );
@@ -406,12 +408,12 @@ setTimeout(() => {
 <SafeAreaView style={styles.safeArea}>
          {/* Header */}
          <View style={styles.header}>
-           <TouchableOpacity
-             onPress={handleBackToLevels}
-             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-           >
-             <Text style={styles.backButton}>← Back</Text>
-           </TouchableOpacity>
+<TouchableOpacity
+              onPress={handleBackToLevels}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <Text style={styles.backButton}>{t('game.back')}</Text>
+            </TouchableOpacity>
           <View>
             <Text style={styles.levelTitle}>{safeLevel.title}</Text>
             <Text style={styles.levelRef}>{safeLevel.bibleRef}</Text>
@@ -465,7 +467,7 @@ setTimeout(() => {
               onPress={handleRestartLevel}
               activeOpacity={0.7}
             >
-              <Text style={styles.buttonText}>🔄 Restart</Text>
+              <Text style={styles.buttonText}>{t('game.restart')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.button, styles.hintButtonStyle]}
@@ -474,7 +476,7 @@ setTimeout(() => {
               activeOpacity={0.7}
             >
               <Text style={[styles.hintButtonText, hintsRemaining === 0 && styles.disabledButtonText]}>
-                💡 Hint ({hintsRemaining})
+                {t('game.hint')} ({hintsRemaining})
               </Text>
             </TouchableOpacity>
           </View>

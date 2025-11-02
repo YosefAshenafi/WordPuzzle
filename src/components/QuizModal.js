@@ -12,10 +12,12 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, GRADIENTS, QUIZ_CONFIG } from '../constants/colors';
 import { getRandomQuestion } from '../constants/levels';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const { width, height } = Dimensions.get('window');
 
 export const QuizModal = ({ visible, onClose, onCorrectAnswer }) => {
+  const { t } = useLanguage();
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showResult, setShowResult] = useState(false);
@@ -189,22 +191,22 @@ export const QuizModal = ({ visible, onClose, onCorrectAnswer }) => {
               </View>
 
               {/* Header with Score and Streak */}
-              <View style={styles.header}>
-                <View style={styles.scoreContainer}>
-                  <Text style={styles.scoreLabel}>SCORE</Text>
-                  <Text style={styles.scoreValue}>{score}</Text>
-                </View>
-                
-                <View style={styles.titleContainer}>
-                  <Text style={styles.title}>📖 Divine Wisdom</Text>
-                  <Text style={styles.subtitle}>Answer to continue your quest</Text>
-                </View>
-                
-                <View style={styles.streakContainer}>
-                  <Text style={styles.streakLabel}>STREAK</Text>
-                  <Text style={styles.streakValue}>🔥 {streak}</Text>
-                </View>
-              </View>
+               <View style={styles.header}>
+                 <View style={styles.scoreContainer}>
+                   <Text style={styles.scoreLabel}>{t('quiz.score')}</Text>
+                   <Text style={styles.scoreValue}>{score}</Text>
+                 </View>
+                 
+                 <View style={styles.titleContainer}>
+                   <Text style={styles.title}>📖 {t('quiz.divineWisdom')}</Text>
+                   <Text style={styles.subtitle}>{t('quiz.answerToContinue')}</Text>
+                 </View>
+                 
+                 <View style={styles.streakContainer}>
+                   <Text style={styles.streakLabel}>{t('quiz.streak')}</Text>
+                   <Text style={styles.streakValue}>🔥 {streak}</Text>
+                 </View>
+               </View>
 
               {/* Timer Bar */}
               <View style={styles.timerContainer}>
@@ -233,15 +235,15 @@ export const QuizModal = ({ visible, onClose, onCorrectAnswer }) => {
               </View>
 
               {/* Question Card */}
-              <View style={styles.questionCard}>
-                <View style={styles.questionHeader}>
-                  <Text style={styles.questionNumber}>Question {streak + 1}</Text>
-                  <Text style={styles.difficulty}>⚡ Divine Challenge</Text>
-                </View>
-                
-                <Text style={styles.question}>{currentQuestion.question}</Text>
-                <Text style={styles.reference}>📜 {currentQuestion.reference}</Text>
-              </View>
+               <View style={styles.questionCard}>
+                 <View style={styles.questionHeader}>
+                   <Text style={styles.questionNumber}>{t('quiz.question')} {streak + 1}</Text>
+                   <Text style={styles.difficulty}>⚡ {t('quiz.divineChallenge')}</Text>
+                 </View>
+                 
+                 <Text style={styles.question}>{currentQuestion.question}</Text>
+                 <Text style={styles.reference}>📜 {currentQuestion.reference}</Text>
+               </View>
 
               {/* Answer Options */}
               <View style={styles.answersContainer}>
@@ -283,29 +285,29 @@ export const QuizModal = ({ visible, onClose, onCorrectAnswer }) => {
               </View>
 
               {/* Result Message */}
-              {showResult && (
-                <Animated.View style={styles.resultContainer}>
-                  {isTimedOut ? (
-                    <Text style={styles.timeoutText}>⏰ Time's up! Try again!</Text>
-                  ) : selectedAnswer === currentQuestion.correctAnswer ? (
-                    <Text style={styles.correctText}>🎉 Correct! +{timeLeft * 10} points!</Text>
-                  ) : (
-                    <Text style={styles.wrongText}>❌ Not quite right. Try again!</Text>
-                  )}
-                </Animated.View>
-              )}
+               {showResult && (
+                 <Animated.View style={styles.resultContainer}>
+                   {isTimedOut ? (
+                     <Text style={styles.timeoutText}>⏰ {t('quiz.timesUpTryAgain')}</Text>
+                   ) : selectedAnswer === currentQuestion.correctAnswer ? (
+                     <Text style={styles.correctText}>🎉 {t('quiz.correctPoints', { points: timeLeft * 10 })}</Text>
+                   ) : (
+                     <Text style={styles.wrongText}>❌ {t('quiz.notQuiteRightTryAgain')}</Text>
+                   )}
+                 </Animated.View>
+               )}
 
               {/* Instructions */}
-              <View style={styles.instructionContainer}>
-                <Text style={styles.instructionText}>
-                  {showResult 
-                    ? (selectedAnswer === currentQuestion.correctAnswer 
-                        ? '🙏 Wisdom granted! Starting new quest...' 
-                        : '📚 Seek the answer and try again!')
-                    : '⚡ Choose wisely - you must answer correctly to continue!'
-                  }
-                </Text>
-              </View>
+               <View style={styles.instructionContainer}>
+                 <Text style={styles.instructionText}>
+                   {showResult 
+                     ? (selectedAnswer === currentQuestion.correctAnswer 
+                         ? t('quiz.wisdomGranted') 
+                         : t('quiz.seekAnswerTryAgain'))
+                     : t('quiz.chooseWisely')
+                   }
+                 </Text>
+               </View>
             </LinearGradient>
           </ImageBackground>
         </Animated.View>

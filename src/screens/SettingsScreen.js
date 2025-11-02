@@ -20,10 +20,12 @@ import { COLORS, GRADIENTS } from '../constants/colors';
 import { getAllStats, getProgress, getBadges } from '../utils/storage';
 import { BADGES, BADGE_RARITY_COLORS } from '../constants/badges';
 import { stopAllLevelSounds } from '../utils/audio';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const { width, height } = Dimensions.get('window');
 
 export const SettingsScreen = ({ navigation }) => {
+  const { t, currentLanguage, changeLanguage } = useLanguage();
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [totalGames, setTotalGames] = useState(0);
   const [bestTime, setBestTime] = useState(null);
@@ -138,9 +140,7 @@ export const SettingsScreen = ({ navigation }) => {
 const handleAboutUs = () => {
     Alert.alert(
       '',
-      '🧩 Bible Puzzle Quest\n\n' +
-      'We are a group of multidisciplinary individuals dedicated to creating a fun Christian puzzle game that encourages kids to explore Bible verses and captivating stories. Our mission is to make learning about the Bible an unforgettable adventure, combining interactive puzzles with uplifting gospel music.\n\n' +
-      '',
+      t('settings.aboutUsContent'),
       [{ text: 'OK', style: 'default' }]
     );
   };
@@ -159,15 +159,15 @@ const handleAboutUs = () => {
       setShowResetModal(false);
       
       Alert.alert(
-        'Success!',
-        'All your data has been reset successfully.',
+        t('settings.success'),
+        t('settings.dataResetSuccess'),
         [{ text: 'OK', style: 'default' }]
       );
     } catch (error) {
       console.error('Error resetting data:', error);
       Alert.alert(
-        'Error',
-        'Failed to reset data. Please try again.',
+        t('settings.error'),
+        t('settings.dataResetError'),
         [{ text: 'OK', style: 'default' }]
       );
     }
@@ -186,25 +186,68 @@ const handleAboutUs = () => {
            <TouchableOpacity
              onPress={() => navigation.goBack()}
              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-           >
-             <Text style={styles.backButton}>← Back</Text>
-           </TouchableOpacity>
-             <Text style={styles.title}>Settings</Text>
-           <View style={styles.placeholder} />
+>
+              <Text style={styles.backButton}>{t('settings.back')}</Text>
+            </TouchableOpacity>
+              <Text style={styles.title}>{t('settings.title')}</Text>
+            <View style={styles.placeholder} />
          </View>
 
         <ScrollView
           contentContainerStyle={styles.content}
           showsVerticalScrollIndicator={false}
         >
-          {/* Sound Settings */}
+          {/* Language Settings */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>🔊 Audio</Text>
+            <Text style={styles.sectionTitle}>{t('common.language')}</Text>
             <View style={styles.settingItem}>
               <View style={styles.settingInfo}>
-                <Text style={styles.settingLabel}>Puzzle Sounds</Text>
+                <Text style={styles.settingLabel}>{t('common.language')}</Text>
                 <Text style={styles.settingDescription}>
-                  Enable background sounds for puzzles
+                  {currentLanguage === 'en' ? t('common.english') : t('common.amharic')}
+                </Text>
+              </View>
+              <View style={styles.languageButtons}>
+                <TouchableOpacity
+                  style={[
+                    styles.languageButton,
+                    currentLanguage === 'en' && styles.languageButtonActive
+                  ]}
+                  onPress={() => changeLanguage('en')}
+                >
+                  <Text style={[
+                    styles.languageButtonText,
+                    currentLanguage === 'en' && styles.languageButtonTextActive
+                  ]}>
+                    {t('common.english')}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    styles.languageButton,
+                    currentLanguage === 'am' && styles.languageButtonActive
+                  ]}
+                  onPress={() => changeLanguage('am')}
+                >
+                  <Text style={[
+                    styles.languageButtonText,
+                    currentLanguage === 'am' && styles.languageButtonTextActive
+                  ]}>
+                    {t('common.amharic')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+
+          {/* Sound Settings */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t('settings.audio')}</Text>
+            <View style={styles.settingItem}>
+              <View style={styles.settingInfo}>
+                <Text style={styles.settingLabel}>{t('settings.puzzleSounds')}</Text>
+                <Text style={styles.settingDescription}>
+                  {t('settings.puzzleSoundsDescription')}
                 </Text>
               </View>
               <Switch
@@ -219,27 +262,27 @@ const handleAboutUs = () => {
 
           {/* Achievements */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>🏆 Achievements</Text>
+            <Text style={styles.sectionTitle}>{t('settings.achievements')}</Text>
             <View style={styles.achievementCard}>
               <View style={styles.achievementRow}>
-                <Text style={styles.achievementLabel}>Stories Completed</Text>
+                <Text style={styles.achievementLabel}>{t('settings.storiesCompleted')}</Text>
                 <Text style={styles.achievementValue}>{completedCount}/6</Text>
               </View>
               <View style={styles.achievementDivider} />
               <View style={styles.achievementRow}>
-                <Text style={styles.achievementLabel}>Games Won</Text>
+                <Text style={styles.achievementLabel}>{t('settings.gamesWon')}</Text>
                 <Text style={styles.achievementValue}>{totalGames}</Text>
               </View>
               <View style={styles.achievementDivider} />
               <View style={styles.achievementRow}>
-                <Text style={styles.achievementLabel}>Best Time</Text>
+                <Text style={styles.achievementLabel}>{t('settings.bestTime')}</Text>
                 <Text style={styles.achievementValue}>
                   {bestTime !== null ? formatTime(bestTime) : '--:--'}
                 </Text>
               </View>
               <View style={styles.achievementDivider} />
               <View style={styles.achievementRow}>
-                <Text style={styles.achievementLabel}>Best Moves</Text>
+                <Text style={styles.achievementLabel}>{t('settings.bestMoves')}</Text>
                 <Text style={styles.achievementValue}>
                   {bestMoves !== null ? bestMoves : '--'}
                 </Text>
@@ -273,20 +316,20 @@ const handleAboutUs = () => {
 
           {/* App Info */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>ℹ️ About</Text>
+            <Text style={styles.sectionTitle}>{t('settings.about')}</Text>
             <TouchableOpacity style={styles.menuItem} onPress={handleAboutUs}>
-              <Text style={styles.menuItemText}>📖 About Us</Text>
+              <Text style={styles.menuItemText}>{t('settings.aboutUs')}</Text>
               <Text style={styles.menuItemArrow}>›</Text>
             </TouchableOpacity>
             <View style={styles.menuItem}>
-              <Text style={styles.menuItemText}>📱 App Version</Text>
+              <Text style={styles.menuItemText}>{t('settings.appVersion')}</Text>
               <Text style={styles.versionText}>1.0.0</Text>
             </View>
             <TouchableOpacity 
               style={[styles.menuItem, styles.resetMenuItem]} 
               onPress={() => setShowResetModal(true)}
             >
-              <Text style={[styles.menuItemText, styles.resetMenuItemText]}>🔄 Reset All Data</Text>
+              <Text style={[styles.menuItemText, styles.resetMenuItemText]}>{t('settings.resetAllData')}</Text>
               <Text style={styles.menuItemArrow}>›</Text>
             </TouchableOpacity>
           </View>
@@ -294,10 +337,10 @@ const handleAboutUs = () => {
           {/* Footer */}
           <View style={styles.footer}>
             <Text style={styles.footerText}>
-              Bible Puzzle Quest
+              Bizzle
             </Text>
             <Text style={styles.footerSubtext}>
-              Made with faith and love
+              {t('settings.madeWithFaith')}
             </Text>
           </View>
         </ScrollView>
@@ -306,22 +349,22 @@ const handleAboutUs = () => {
         {showResetModal && (
           <View style={styles.modalOverlay}>
             <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>⚠️ Reset All Data?</Text>
+              <Text style={styles.modalTitle}>{t('settings.resetDataTitle')}</Text>
               <Text style={styles.modalMessage}>
-                This will permanently delete all your progress, achievements, badges, and settings. This action cannot be undone.
+                {t('settings.resetDataMessage')}
               </Text>
               <View style={styles.modalButtons}>
                 <TouchableOpacity
                   style={[styles.modalButton, styles.cancelButton]}
                   onPress={() => setShowResetModal(false)}
                 >
-                  <Text style={styles.cancelButtonText}>Cancel</Text>
+                  <Text style={styles.cancelButtonText}>{t('settings.cancel')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.modalButton, styles.confirmButton]}
                   onPress={handleResetData}
                 >
-                  <Text style={styles.confirmButtonText}>Reset</Text>
+                  <Text style={styles.confirmButtonText}>{t('settings.reset')}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -664,5 +707,30 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: COLORS.white,
+  },
+  // Language toggle styles
+  languageButtons: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  languageButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    backgroundColor: COLORS.white + '20',
+    borderWidth: 1,
+    borderColor: COLORS.white + '30',
+  },
+  languageButtonActive: {
+    backgroundColor: COLORS.gold,
+    borderColor: COLORS.gold,
+  },
+  languageButtonText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: COLORS.white,
+  },
+  languageButtonTextActive: {
+    color: COLORS.darker,
   },
 });

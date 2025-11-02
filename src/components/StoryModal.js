@@ -11,10 +11,12 @@ import {
 } from 'react-native';
 import { COLORS, GRADIENTS } from '../constants/colors';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const { width, height } = Dimensions.get('window');
 
 export const StoryModal = ({ visible, levelData, onClose, onContinue }) => {
+  const { t } = useLanguage();
   const [opacity] = useState(new Animated.Value(0));
   const [scale] = useState(new Animated.Value(0.5));
 
@@ -52,7 +54,7 @@ export const StoryModal = ({ visible, levelData, onClose, onContinue }) => {
             </View>
             <View style={styles.content}>
               <View style={styles.header}>
-                <Text style={styles.title}>✨ You've Unlocked ✨</Text>
+                <Text style={styles.title}>✨ {t('story.youveUnlocked')} ✨</Text>
                 <Text style={styles.storyTitle}>{levelData.title}</Text>
                 <Text style={styles.ref}>{levelData.bibleRef}</Text>
               </View>
@@ -70,7 +72,7 @@ export const StoryModal = ({ visible, levelData, onClose, onContinue }) => {
                   onPress={onClose}
                   activeOpacity={0.7}
                 >
-                  <Text style={styles.buttonText}>Close</Text>
+                  <Text style={styles.buttonText}>{t('story.close')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.continueButton}
@@ -83,7 +85,7 @@ export const StoryModal = ({ visible, levelData, onClose, onContinue }) => {
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 1 }}
                   >
-                    <Text style={styles.continueText}>Continue</Text>
+                    <Text style={styles.continueText}>{t('story.continue')}</Text>
                   </LinearGradient>
                 </TouchableOpacity>
               </View>

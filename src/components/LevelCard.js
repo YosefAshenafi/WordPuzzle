@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { COLORS } from '../constants/colors';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export const LevelCard = ({
   level,
@@ -17,6 +18,7 @@ export const LevelCard = ({
   isCompleted,
   onPress,
 }) => {
+  const { t } = useLanguage();
   const [scaleAnim] = useState(new Animated.Value(1));
   const [opacityAnim] = useState(new Animated.Value(isUnlocked ? 1 : 0.6));
 
@@ -52,20 +54,20 @@ export const LevelCard = ({
             style={styles.overlay}
           >
             <View style={styles.content}>
-              <Text style={styles.levelNumber}>Level {level.id}</Text>
+              <Text style={styles.levelNumber}>{t('levelCard.level')} {level.id}</Text>
               <Text style={styles.title}>{level.title}</Text>
               <Text style={styles.ref}>{level.bibleRef}</Text>
 
               {!isUnlocked && (
                 <View style={styles.lockContainer}>
                   <Text style={styles.lockIcon}>🔒</Text>
-                  <Text style={styles.lockText}>Locked</Text>
+                  <Text style={styles.lockText}>{t('levelCard.locked')}</Text>
                 </View>
               )}
 
               {isCompleted && (
                 <View style={styles.completedBadge}>
-                  <Text style={styles.completedText}>✓ Completed</Text>
+                  <Text style={styles.completedText}>{t('levelCard.completed')}</Text>
                 </View>
               )}
             </View>

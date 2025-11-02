@@ -18,10 +18,12 @@ import { getRandomVerse, LEVELS } from '../constants/levels';
 import { getProgress, getAllStats, loadCurrentGameState } from '../utils/storage';
 import { useAuth } from '../contexts/AuthContext';
 import { stopAllLevelSounds } from '../utils/audio';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const { width, height } = Dimensions.get('window');
 
 export const HomeScreen = ({ navigation }) => {
+  const { t } = useLanguage();
   const { user, signOut } = useAuth();
   const [verse, setVerse] = useState('');
   const [completedCount, setCompletedCount] = useState(0);
@@ -223,7 +225,7 @@ const loadProgress = async () => {
           {/* Enhanced decorative elements */}
           <Animated.View style={[styles.decorContainer, { opacity: subtitle1Op }]}>
             <View style={styles.decorBox}>
-              <Text style={styles.decorText}>✨ Unlock Sacred Stories ✨</Text>
+              <Text style={styles.decorText}>{t('home.unlockSacredStories')}</Text>
             </View>
           </Animated.View>
           
@@ -232,12 +234,12 @@ const loadProgress = async () => {
             <View style={styles.progressCard}>
               <View style={styles.progressBox}>
                 <Text style={styles.progressNumber}>{completedCount}</Text>
-                <Text style={styles.progressLabel}>Stories Unlocked</Text>
+                <Text style={styles.progressLabel}>{t('home.storiesUnlocked')}</Text>
               </View>
               <View style={styles.progressDivider} />
               <View style={styles.progressBox}>
                 <Text style={styles.progressNumber}>6</Text>
-                <Text style={styles.progressLabel}>Total Stories</Text>
+                <Text style={styles.progressLabel}>{t('home.totalStories')}</Text>
               </View>
             </View>
           </Animated.View>
@@ -246,14 +248,14 @@ const loadProgress = async () => {
           <Animated.View style={[styles.achievementContainer, { opacity: subtitle2Op }]}>
             <View style={styles.achievementCard}>
               <View style={styles.achievementHeader}>
-                <Text style={styles.achievementTitle}>🏆 Personal Records</Text>
+                <Text style={styles.achievementTitle}>{t('home.personalRecords')}</Text>
               </View>
               
               {totalGames > 0 ? (
                 <View>
                   {/* Current Game Stats */}
                   <View style={styles.currentGameSection}>
-                    <Text style={styles.currentGameLabel}>Last Game</Text>
+                    <Text style={styles.currentGameLabel}>{t('home.lastGame')}</Text>
                     <View style={styles.currentGameStats}>
                       <View style={styles.currentGameItem}>
                         <Text style={styles.currentGameIcon}>⏱️</Text>
@@ -264,7 +266,7 @@ const loadProgress = async () => {
                       <View style={styles.currentGameDivider} />
                       <View style={styles.currentGameItem}>
                         <Text style={styles.currentGameValue}>
-                          {currentMoves !== null ? `${currentMoves} moves` : '-- moves'}
+                          {currentMoves !== null ? `${currentMoves} ${t('home.moves')}` : `-- ${t('home.moves')}`}
                         </Text>
                       </View>
                     </View>
@@ -272,12 +274,12 @@ const loadProgress = async () => {
                   
                   {/* Best Records */}
                   <View style={styles.bestRecordsSection}>
-                    <Text style={styles.bestRecordsLabel}>All-Time Best</Text>
+                    <Text style={styles.bestRecordsLabel}>{t('home.allTimeBest')}</Text>
                     <View style={styles.bestRecordsStats}>
                       <View style={styles.bestRecordItem}>
                         <Text style={styles.bestRecordIcon}>⚡</Text>
                         <View style={styles.bestRecordInfo}>
-                          <Text style={styles.bestRecordLabel}>Time</Text>
+                          <Text style={styles.bestRecordLabel}>{t('home.time')}</Text>
                           <Text style={[
                             styles.bestRecordValue,
                             currentTime === bestTime && styles.newRecord
@@ -290,7 +292,7 @@ const loadProgress = async () => {
                       <View style={styles.bestRecordDivider} />
                       <View style={styles.bestRecordItem}>
                         <View style={styles.bestRecordInfo}>
-                          <Text style={styles.bestRecordLabel}>Moves</Text>
+                          <Text style={styles.bestRecordLabel}>{t('home.moves')}</Text>
                           <Text style={[
                             styles.bestRecordValue,
                             currentMoves === bestMoves && styles.newRecord
@@ -305,7 +307,7 @@ const loadProgress = async () => {
                 </View>
               ) : (
                 <View style={styles.noGamesContainer}>
-                  <Text style={styles.noGamesText}>Complete puzzles to see your records!</Text>
+                  <Text style={styles.noGamesText}>{t('home.completePuzzlesToSeeRecords')}</Text>
                 </View>
               )}
             </View>
@@ -325,21 +327,21 @@ const loadProgress = async () => {
                 end={{ x: 1, y: 1 }}
               >
                 <Text style={styles.primaryButtonText}>
-                  {completedCount > 0 ? '▶ Continue Quest' : '▶ Start Quest'}
+                  {completedCount > 0 ? `▶ ${t('home.continueQuest')}` : `▶ ${t('home.startQuest')}`}
                 </Text>
               </LinearGradient>
             </TouchableOpacity>
           </Animated.View>
 
-           <Animated.View style={[styles.buttonContainer, { transform: [{ scale: button2Scale }] }]}>
-             <TouchableOpacity
-               style={styles.secondaryButton}
-               onPress={() => navigation.navigate('Levels')}
-               activeOpacity={0.8}
-             >
-               <Text style={styles.secondaryButtonText}>🎮 Select Level</Text>
-             </TouchableOpacity>
-           </Animated.View>
+<Animated.View style={[styles.buttonContainer, { transform: [{ scale: button2Scale }] }]}>
+              <TouchableOpacity
+                style={styles.secondaryButton}
+                onPress={() => navigation.navigate('Levels')}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.secondaryButtonText}>{t('home.selectLevel')}</Text>
+              </TouchableOpacity>
+            </Animated.View>
 
            {/* User Info and Sign Out
            {user && (
@@ -363,7 +365,7 @@ const loadProgress = async () => {
           <View style={styles.footer}>
             <View style={styles.footerCard}>
               <Text style={styles.footerText}>
-                Complete puzzles to discover Bible stories
+                {t('home.completePuzzlesToDiscover')}
               </Text>
             </View>
           </View>

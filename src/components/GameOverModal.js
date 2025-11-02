@@ -12,6 +12,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, GRADIENTS, QUIZ_CONFIG } from '../constants/colors';
 import { getRandomQuestion } from '../constants/levels';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const { width, height } = Dimensions.get('window');
 
@@ -26,6 +27,7 @@ export const GameOverModal = ({
   timeTaken = 0,
   isTimeUp = false
 }) => {
+  const { t } = useLanguage();
   const [showQuiz, setShowQuiz] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -205,66 +207,66 @@ export const GameOverModal = ({
                 <View style={styles.content}>
                    {/* Header */}
                    <View style={styles.header}>
-                     <Text style={styles.title}>{isTimeUp ? '⏰ Time\'s Up!' : '⏰ Out of Moves!'}</Text>
-                     <Text style={styles.subtitle}>{levelTitle}</Text>
-                   </View>
+                      <Text style={styles.title}>{isTimeUp ? t('gameOver.timesUp') : t('gameOver.outOfMoves')}</Text>
+                      <Text style={styles.subtitle}>{levelTitle}</Text>
+                    </View>
 
 {/* Stats */}
-                  <View style={styles.statsContainer}>
-                    <View style={styles.statBox}>
-                      <Text style={styles.statLabel}>⏱️ Time</Text>
-                      <Text style={styles.statValue}>{formatTime(timeTaken)}</Text>
-                    </View>
-                    <View style={styles.statBox}>
-                      <Text style={styles.statLabel}>🔄 Restarts</Text>
-                      <Text style={styles.statValue}>{restartCount}</Text>
-                    </View>
-                    <View style={styles.statBox}>
-                      <Text style={styles.statLabel}>📊 Status</Text>
-                      <Text style={styles.statValue}>❌ Incomplete</Text>
-                    </View>
-                  </View>
+                   <View style={styles.statsContainer}>
+                     <View style={styles.statBox}>
+                       <Text style={styles.statLabel}>⏱️ {t('gameOver.time')}</Text>
+                       <Text style={styles.statValue}>{formatTime(timeTaken)}</Text>
+                     </View>
+                     <View style={styles.statBox}>
+                       <Text style={styles.statLabel}>🔄 {t('gameOver.restarts')}</Text>
+                       <Text style={styles.statValue}>{restartCount}</Text>
+                     </View>
+                     <View style={styles.statBox}>
+                       <Text style={styles.statLabel}>📊 {t('gameOver.status')}</Text>
+                       <Text style={styles.statValue}>❌ {t('gameOver.incomplete')}</Text>
+                     </View>
+                   </View>
 
                    {/* Message */}
                    <View style={styles.messageContainer}>
-                     <Text style={styles.messageText}>
-                       {isTimeUp 
-                         ? 'Time ran out, but every moment is a learning opportunity!'
-                         : 'The path was challenging, but wisdom comes through perseverance!'
-                       }
-                     </Text>
-                     <Text style={styles.challengeText}>
-                       Answer a biblical question to earn another chance!
-                     </Text>
-                   </View>
+                      <Text style={styles.messageText}>
+                        {isTimeUp 
+                          ? t('gameOver.timeRanOut')
+                          : t('gameOver.pathChallenging')
+                        }
+                      </Text>
+                      <Text style={styles.challengeText}>
+                        {t('gameOver.answerToRetry')}
+                      </Text>
+                    </View>
 
                   {/* Action Buttons */}
                   <View style={styles.buttonsContainer}>
-                    <TouchableOpacity
-                      style={styles.retryButton}
-                      onPress={handleRetryWithQuiz}
-                      activeOpacity={0.8}
-                    >
-                      <Text style={styles.retryButtonText}>Answer to Retry</Text>
-                    </TouchableOpacity>
-                    
-                    <TouchableOpacity
-                      style={styles.backButton}
-                      onPress={onBackToLevels}
-                      activeOpacity={0.8}
-                    >
-                      <Text style={styles.backButtonText}>← Back to Levels</Text>
-                    </TouchableOpacity>
+                     <TouchableOpacity
+                       style={styles.retryButton}
+                       onPress={handleRetryWithQuiz}
+                       activeOpacity={0.8}
+                     >
+                       <Text style={styles.retryButtonText}>{t('gameOver.answerToRetryButton')}</Text>
+                     </TouchableOpacity>
+                     
+                     <TouchableOpacity
+                       style={styles.backButton}
+                       onPress={onBackToLevels}
+                       activeOpacity={0.8}
+                     >
+                       <Text style={styles.backButtonText}>← {t('gameOver.backToLevels')}</Text>
+                     </TouchableOpacity>
                   </View>
                 </View>
               ) : (
                 // Quiz Screen
                 <View style={styles.quizContent}>
                   {/* Quiz Header */}
-                  <View style={styles.quizHeader}>
-                    <Text style={styles.quizTitle}>📖 Divine Wisdom</Text>
-                    <Text style={styles.quizSubtitle}>Answer correctly to retry!</Text>
-                  </View>
+                   <View style={styles.quizHeader}>
+                     <Text style={styles.quizTitle}>📖 {t('gameOver.divineWisdom')}</Text>
+                     <Text style={styles.quizSubtitle}>{t('gameOver.answerCorrectlyToRetry')}</Text>
+                   </View>
 
                   {/* Timer Bar */}
                   <View style={styles.timerContainer}>
@@ -340,13 +342,13 @@ export const GameOverModal = ({
                   {/* Result Message */}
                   {showResult && (
                     <Animated.View style={styles.resultContainer}>
-                      {isTimedOut ? (
-                        <Text style={styles.timeoutText}>⏰ Time's up!</Text>
-                      ) : selectedAnswer === currentQuestion.correctAnswer ? (
-                        <Text style={styles.correctText}>🎉 Correct! Retrying level...</Text>
-                      ) : (
-                        <Text style={styles.wrongText}>❌ Not quite right. Try again later!</Text>
-                      )}
+                       {isTimedOut ? (
+                         <Text style={styles.timeoutText}>⏰ {t('gameOver.timesUpQuiz')}</Text>
+                       ) : selectedAnswer === currentQuestion.correctAnswer ? (
+                         <Text style={styles.correctText}>🎉 {t('gameOver.correctRetrying')}</Text>
+                       ) : (
+                         <Text style={styles.wrongText}>❌ {t('gameOver.notQuiteRight')}</Text>
+                       )}
                     </Animated.View>
                   )}
                 </View>
