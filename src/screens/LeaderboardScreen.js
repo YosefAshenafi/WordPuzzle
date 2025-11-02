@@ -17,6 +17,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useAuth } from '../contexts/AuthContext';
 import { LeaderboardService } from '../services/leaderboardService';
 import { COLORS, GRADIENTS } from '../constants/colors';
+import { stopAllLevelSounds } from '../utils/audio';
 
 const { width, height } = Dimensions.get('window');
 
@@ -72,6 +73,10 @@ export const LeaderboardScreen = ({ navigation }) => {
 
   useEffect(() => {
     loadLeaderboard();
+    // Stop any audio that might be playing when entering leaderboard
+    stopAllLevelSounds().catch(error => {
+      console.log('Error stopping sounds on leaderboard focus:', error);
+    });
   }, [loadLeaderboard]);
 
   const renderRankBadge = (rank) => {

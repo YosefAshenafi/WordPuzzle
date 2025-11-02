@@ -5,7 +5,8 @@ import { StatusBar } from 'expo-status-bar';
 
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { CustomSplashScreen } from './src/components/CustomSplashScreen';
-import { initAudio } from './src/utils/audio';
+import { initAudio, stopAllLevelSounds } from './src/utils/audio';
+import { AppState } from 'react-native';
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -28,6 +29,24 @@ export default function App() {
     }
 
     prepare();
+  }, []);
+
+  // Handle app state changes to stop audio when app goes to background
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState) => {
+      if (nextAppState === 'background') {
+        // Stop all audio when app goes to background
+        stopAllLevelSounds().catch(error => {
+          console.log('Error stopping sounds on app background:', error);
+        });
+      }
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      subscription?.remove();
+    };
   }, []);
 
   const handleSplashAnimationComplete = async () => {

@@ -19,6 +19,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, GRADIENTS } from '../constants/colors';
 import { getAllStats, getProgress, getBadges } from '../utils/storage';
 import { BADGES, BADGE_RARITY_COLORS } from '../constants/badges';
+import { stopAllLevelSounds } from '../utils/audio';
 
 const { width, height } = Dimensions.get('window');
 
@@ -58,6 +59,10 @@ export const SettingsScreen = ({ navigation }) => {
     useCallback(() => {
       loadAchievements();
       loadBadges();
+      // Stop any audio that might be playing when entering settings
+      stopAllLevelSounds().catch(error => {
+        console.log('Error stopping sounds on settings focus:', error);
+      });
     }, [])
   );
 

@@ -16,6 +16,7 @@ import { COLORS, GRADIENTS } from '../constants/colors';
 import { getRandomVerse, LEVELS } from '../constants/levels';
 import { getProgress, getAllStats, loadCurrentGameState } from '../utils/storage';
 import { useAuth } from '../contexts/AuthContext';
+import { stopAllLevelSounds } from '../utils/audio';
 
 const { width, height } = Dimensions.get('window');
 
@@ -52,6 +53,10 @@ export const HomeScreen = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
       loadProgress();
+      // Stop any audio that might be playing when returning to home
+      stopAllLevelSounds().catch(error => {
+        console.log('Error stopping sounds on home focus:', error);
+      });
     }, [])
   );
 

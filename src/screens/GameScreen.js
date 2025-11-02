@@ -22,7 +22,7 @@ import {
   debugShuffle,
 } from '../utils/puzzleLogic';
 import { saveProgress, saveLevelStats, saveCurrentGameState, loadCurrentGameState, clearCurrentGameState } from '../utils/storage';
-import { playVictorySound, loadLevelSound, playLevelSound, stopLevelSound, isSoundEnabled } from '../utils/audio';
+import { playVictorySound, loadLevelSound, playLevelSound, stopLevelSound, stopAllLevelSounds, isSoundEnabled } from '../utils/audio';
 import { useAuth } from '../contexts/AuthContext';
 import { LeaderboardService } from '../services/leaderboardService';
 
@@ -52,12 +52,10 @@ export const GameScreen = ({ route, navigation }) => {
     isSoundEnabled().then(setSoundEnabled);
     
     return () => {
-      // Stop level sound when leaving - cleanup will be handled by stopLevelSound
-      if (level.sound) {
-        stopLevelSound(level.sound).catch(error => {
-          console.log('Error stopping sound:', error);
-        });
-      }
+      // Stop all level sounds when leaving the screen to ensure no audio plays outside puzzle
+      stopAllLevelSounds().catch(error => {
+        console.log('Error stopping all sounds:', error);
+      });
     };
   }, [level, isContinue]);
 

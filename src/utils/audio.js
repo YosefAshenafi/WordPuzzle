@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 let victorySound = null;
 let backgroundMusic = null;
 let levelSounds = {};
+let currentLevelSound = null;
 
 export const initAudio = async () => {
   try {
@@ -86,6 +87,7 @@ export const playLevelSound = async (soundFile) => {
       const status = await sound.getStatusAsync();
       if (status.isLoaded) {
         await sound.replayAsync();
+        currentLevelSound = soundKey; // Track current playing sound
       }
     }
   } catch (error) {
@@ -102,6 +104,11 @@ export const stopLevelSound = async (soundFile) => {
       await levelSounds[soundKey].stopAsync();
       await levelSounds[soundKey].unloadAsync(); // Also unload to free memory
       delete levelSounds[soundKey]; // Remove from object
+    }
+    
+    // Clear current level sound if it matches
+    if (currentLevelSound === soundKey) {
+      currentLevelSound = null;
     }
   } catch (error) {
     console.error('Error stopping level sound:', error);
@@ -147,6 +154,29 @@ export const stopBackgroundMusic = async () => {
   }
 };
 
+// Stop all level sounds immediately
+export const stopAllLevelSounds = async () => {
+  try {
+    // Stop and unload all level sounds
+    const soundKeys = Object.keys(levelSounds);
+    await Promise.all(soundKeys.map(async (soundKey) => {
+      if (levelSounds[soundKey]) {
+        try {
+          await levelSounds[soundKey].stopAsync();
+          await levelSounds[soundKey].unloadAsync();
+        } catch (error) {
+          console.log('Error stopping sound during cleanup:', error);
+        }
+      }
+    }));
+    
+    levelSounds = {};
+    currentLevelSound = null;
+  } catch (error) {
+    console.error('Error stopping all level sounds:', error);
+  }
+};
+
 export const cleanup = async () => {
   try {
     await stopBackgroundMusic();
@@ -155,15 +185,7 @@ export const cleanup = async () => {
       victorySound = null;
     }
     
-    // Clean up all level sounds
-    Object.values(levelSounds).forEach(async (sound) => {
-      try {
-        await sound.unloadAsync();
-      } catch (error) {
-        console.error('Error unloading level sound:', error);
-      }
-    });
-    levelSounds = {};
+    await stopAllLevelSounds();
   } catch (error) {
     console.error('Error cleaning up audio:', error);
   }

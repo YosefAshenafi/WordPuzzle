@@ -8,6 +8,7 @@ import { SettingsScreen } from '../screens/SettingsScreen';
 import { AuthScreen } from '../screens/AuthScreen';
 import { LeaderboardScreen } from '../screens/LeaderboardScreen';
 import { AuthProvider, useAuth } from '../contexts/AuthContext';
+import { stopAllLevelSounds } from '../utils/audio';
 
 const Stack = createStackNavigator();
 
@@ -24,6 +25,17 @@ const AppNavigator = () => {
         headerShown: false,
         animationEnabled: true,
         cardStyle: { backgroundColor: 'transparent' },
+      }}
+      listeners={{
+        state: (e) => {
+          // Stop all audio when navigating away from Game screen
+          const routeName = e.data.state.routes[e.data.state.index]?.name;
+          if (routeName !== 'Game') {
+            stopAllLevelSounds().catch(error => {
+              console.log('Error stopping sounds on navigation:', error);
+            });
+          }
+        },
       }}
     >
       {!user ? (

@@ -14,6 +14,7 @@ import { LEVELS } from '../constants/levels';
 import { LevelCard } from '../components/LevelCard';
 import { QuizModal } from '../components/QuizModal';
 import { getProgress } from '../utils/storage';
+import { stopAllLevelSounds } from '../utils/audio';
 
 export const LevelSelectionScreen = ({ navigation }) => {
   const [progress, setProgress] = useState({});
@@ -22,7 +23,13 @@ export const LevelSelectionScreen = ({ navigation }) => {
 
   useEffect(() => {
     loadProgress();
-    const unsubscribe = navigation.addListener('focus', loadProgress);
+    const unsubscribe = navigation.addListener('focus', () => {
+      loadProgress();
+      // Stop any audio that might be playing when entering level selection
+      stopAllLevelSounds().catch(error => {
+        console.log('Error stopping sounds on levels focus:', error);
+      });
+    });
     return unsubscribe;
   }, [navigation]);
 
