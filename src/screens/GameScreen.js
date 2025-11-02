@@ -308,10 +308,6 @@ const initializeGame = (isContinue = false) => {
     }
   };
 
-  const toggleHints = () => {
-    setShowHints(!showHints);
-  };
-
   const handleStoryClose = () => {
     setShowStory(false);
   };
@@ -407,13 +403,6 @@ const initializeGame = (isContinue = false) => {
             <Text style={styles.verseText}>{safeLevel.verse}</Text>
           </View>
 
-          {/* Victory Badge */}
-          <Animated.View style={[styles.victoryBadge, { transform: [{ scale: victoryScale }] }]}>
-            <Text style={styles.victoryEmoji}>✨</Text>
-            <Text style={styles.victoryText}>SOLVED!</Text>
-            <Text style={styles.victoryEmoji}>✨</Text>
-          </Animated.View>
-
           {/* Puzzle Grid */}
           {gameStarted && tiles.length > 0 && (
             <PuzzleGrid
@@ -445,15 +434,6 @@ const initializeGame = (isContinue = false) => {
             >
               <Text style={[styles.hintButtonText, hintsRemaining === 0 && styles.disabledButtonText]}>
                 💡 Hint ({hintsRemaining})
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.button, styles.hintButtonStyle]}
-              onPress={toggleHints}
-              activeOpacity={0.7}
-            >
-              <Text style={styles.hintButtonText}>
-                {showHints ? '🙈 Hide' : '👁️ Show'} Numbers
               </Text>
             </TouchableOpacity>
           </View>

@@ -65,16 +65,12 @@ export const PuzzleGrid = ({
             {Math.max(0, maxMoves - moveCount)}
           </Text>
         </View>
-      </View>
-
-      {/* Preview Image */}
-      <View style={styles.previewContainer}>
-        <Text style={styles.previewLabel}>Preview</Text>
-        <TouchableOpacity onPress={() => setShowPreviewModal(true)} activeOpacity={0.8}>
-        <Image
-          source={imageUrl}
-          style={styles.previewImage}
-        />
+        <TouchableOpacity 
+          style={styles.previewButton} 
+          onPress={() => setShowPreviewModal(true)} 
+          activeOpacity={0.8}
+        >
+          <Text style={styles.previewIcon}>👁️</Text>
         </TouchableOpacity>
       </View>
 
@@ -305,23 +301,19 @@ const styles = StyleSheet.create({
     borderColor: COLORS.accent,
     borderStyle: 'dashed',
   },
-  previewContainer: {
+  previewButton: {
     alignItems: 'center',
-    marginBottom: 20,
-  },
-  previewLabel: {
-    color: COLORS.gold,
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 8,
-  },
-  previewImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 8,
+    backgroundColor: COLORS.white + '20',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 10,
+    justifyContent: 'center',
     borderWidth: 2,
-    borderColor: COLORS.gold,
-    resizeMode: 'cover',
+    borderColor: COLORS.gold + '40',
+  },
+  previewIcon: {
+    fontSize: 20,
+    color: COLORS.gold,
   },
   modalOverlay: {
     flex: 1,
