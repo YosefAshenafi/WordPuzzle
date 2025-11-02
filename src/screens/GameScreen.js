@@ -157,6 +157,17 @@ const initializeGame = (isContinue = false) => {
           setIsComplete(false);
           setShowHints(savedState.showHints || false);
           setHintsRemaining(savedState.hintsRemaining !== undefined ? savedState.hintsRemaining : 3);
+          
+          // Load and play level sound when continuing game (non-blocking)
+          if (safeLevel.sound) {
+            loadLevelSound(safeLevel.sound).then(() => {
+              playLevelSound(safeLevel.sound).catch(error => {
+                console.log('Sound playback failed on continue, game continues:', error);
+              });
+            }).catch(error => {
+              console.log('Sound loading failed on continue, game continues:', error);
+            });
+          }
         } else {
           // No saved state, start fresh
           startFreshGame();

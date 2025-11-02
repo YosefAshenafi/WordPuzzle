@@ -1,40 +1,38 @@
 // Local image paths for React Native
 import samsonImg from '../assets/images/samson.png';
-import eyesusImg from '../assets/images/eyesus.png';
-import kalunImg from '../assets/images/the-word.png';
+// import eyesusImg from '../assets/images/eyesus.png';
+import theWordImg from '../assets/images/the-word.png';
 import creationImg from '../assets/images/creation.png';
-import alemhuluImg from '../assets/images/all-the-world.png';
+import allTheWorldImg from '../assets/images/all-the-world.png';
 import songToJesusImg from '../assets/images/song-to-jesus.png';
+import jesusImg from '../assets/images/jesus.png';
 
 // Fallback remote URLs for tunnel mode
 const REMOTE_IMAGE_BASE = 'https://expo.dev/assets/assets/?platform=ios&hash='; // This would need actual asset hashes
 
 // Local sound paths for React Native
-// Temporarily disabled for testing
-// import samsonSound from '../assets/sounds/samson.MP3';
-// import eyesusSound from '../assets/sounds/eyesus.MP3';
-// import kalunSound from '../assets/sounds/the-word.MP3';
-// import creationSound from '../assets/sounds/creation.mp3';
-// import alemhuluSound from '../assets/sounds/all-the-world.MP3';
-// import songToJesusSound from '../assets/sounds/song-to-jesus.MP3';
+// Use asset references for sounds
+const sounds = {
+  samson: require('../assets/sounds/samson.MP3'),
+  // eyesus: require('../assets/sounds/eyesus.MP3'),
+  'the-word': require('../assets/sounds/the-word.MP3'),
+  creation: require('../assets/sounds/creation.mp3'),
+  'all-the-world': require('../assets/sounds/all-the-world.MP3'),
+  'song-to-jesus': require('../assets/sounds/song-to-jesus.MP3'),
+  jesus: require('../assets/sounds/jesus.MP3'),
+};
 
 const images = {
   samson: samsonImg,
-  eyesus: eyesusImg,
-  kalun: kalunImg,
+  // eyesus: eyesusImg,
+  'the-word': theWordImg,
   creation: creationImg,
-  alemhulu: alemhuluImg,
-  songToJesus: songToJesusImg,
+  'all-the-world': allTheWorldImg,
+  'song-to-jesus': songToJesusImg,
+  jesus: jesusImg,
 };
 
-const sounds = {
-  samson: null,
-  eyesus: null,
-  kalun: null,
-  creation: null,
-  alemhulu: null,
-  songToJesus: null,
-};
+// Sounds are already defined above
 
 export const LEVELS = [
   {
@@ -48,13 +46,24 @@ export const LEVELS = [
     moves: 50,
     gridSize: 4,
   },
+  // {
+  //   id: 2,
+  //   title: 'Jesus',
+  //   bibleRef: 'Matthew 1-28',
+  //   verse: '"For God so loved the world that he gave his one and only Son." - John 3:16',
+  //   image: images.eyesus,
+  //   sound: sounds.eyesus,
+  //   story: `Jesus Christ, the Son of God, came to earth to save humanity from sin. He taught about God's love, healed the sick, fed the hungry, and performed many miracles. He showed compassion to outcasts and challenged religious hypocrisy. Jesus willingly died on the cross as a sacrifice for our sins, was buried, and rose again on the third day. His resurrection offers forgiveness, eternal life, and hope to all who believe in Him. Jesus is the way, the truth, and the life.`,
+  //   moves: 60,
+  //   gridSize: 5,
+  // },
   {
     id: 2,
     title: 'Jesus',
     bibleRef: 'Matthew 1-28',
     verse: '"For God so loved the world that he gave his one and only Son." - John 3:16',
-    image: images.eyesus,
-    sound: sounds.eyesus,
+    image: images.jesus,
+    sound: sounds.jesus,
     story: `Jesus Christ, the Son of God, came to earth to save humanity from sin. He taught about God's love, healed the sick, fed the hungry, and performed many miracles. He showed compassion to outcasts and challenged religious hypocrisy. Jesus willingly died on the cross as a sacrifice for our sins, was buried, and rose again on the third day. His resurrection offers forgiveness, eternal life, and hope to all who believe in Him. Jesus is the way, the truth, and the life.`,
     moves: 60,
     gridSize: 5,
@@ -64,8 +73,8 @@ export const LEVELS = [
     title: 'The Word',
     bibleRef: 'Exodus 20',
     verse: '"You shall have no other gods before me." - Exodus 20:3',
-    image: images.kalun,
-    sound: sounds.kalun,
+    image: images['the-word'],
+    sound: sounds['the-word'],
     story: `The Ten Commandments were given by God to Moses on Mount Sinai, serving as fundamental moral laws for humanity. These commandments teach us to love God above all else, honor our parents, and respect others. They guide us in living righteous lives by prohibiting murder, adultery, theft, false witness, and coveting. Jesus summarized these laws with two great commandments: to love God with all our heart, soul, and mind, and to love our neighbor as ourselves. These timeless principles continue to guide believers in faith and conduct.`,
     moves: 55,
     gridSize: 4,
@@ -86,8 +95,8 @@ export const LEVELS = [
     title: 'All The World',
     bibleRef: 'Genesis 2-3',
     verse: '"The Lord God made garments of skin for Adam and his wife and clothed them." - Genesis 3:21',
-    image: images.alemhulu,
-    sound: sounds.alemhulu,
+    image: images['all-the-world'],
+    sound: sounds['all-the-world'],
     story: `Adam and Eve were the first humans created by God, placed in the perfect Garden of Eden. They walked with God in harmony and had everything they needed. However, they were tempted by the serpent to disobey God's command not to eat from the Tree of Knowledge. Their sin brought shame, separation from God, and expulsion from the garden. Yet even in judgment, God showed mercy by promising a Savior and providing clothing. This story reminds us of human fallibility and God's unfailing grace and redemption plan.`,
     moves: 65,
     gridSize: 5,
@@ -97,8 +106,8 @@ export const LEVELS = [
     title: 'Song To Jesus',
     bibleRef: 'Psalm 150',
     verse: '"Let everything that has breath praise the Lord." - Psalm 150:6',
-    image: images.songToJesus,
-    sound: sounds.songToJesus,
+    image: images['song-to-jesus'],
+    sound: sounds['song-to-jesus'],
     story: `Music and praise have always been integral to worship and spiritual expression. Throughout the Bible, we see people singing songs of praise to God, from David's psalms to the angels' announcement at Jesus' birth. Music lifts our spirits, helps us focus on God's goodness, and allows us to express emotions that words alone cannot capture. When we sing to Jesus, we join a timeless chorus of believers throughout history who have used melody and rhythm to honor God, share His love, and experience His presence in a profound way.`,
     moves: 55,
     gridSize: 4,
