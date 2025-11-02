@@ -94,10 +94,10 @@ const handleSelectLevel = (level) => {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.header}>
           <TouchableOpacity
-            onPress={() => navigation.goBack()}
+            onPress={() => navigation.navigate('Home')}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <Text style={styles.backButton}>← Back</Text>
+            <Text style={styles.homeButton}>🏠</Text>
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Choose Your Quest</Text>
           <View style={styles.progressBadge}>
@@ -173,8 +173,8 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     backgroundColor: COLORS.darker + 'CC',
   },
-  backButton: {
-    fontSize: 16,
+  homeButton: {
+    fontSize: 24,
     fontWeight: '700',
     color: COLORS.gold,
   },

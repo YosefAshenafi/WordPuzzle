@@ -373,6 +373,7 @@ setTimeout(() => {
   
 
   return (
+  <>
     <LinearGradient
       colors={GRADIENTS.secondary}
       start={{ x: 0, y: 0 }}
@@ -490,16 +491,17 @@ setTimeout(() => {
         timeTaken={timer}
       />
       </SafeAreaView>
-      
-      {/* Confetti Celebration */}
-      {showConfetti && (
-        <Confetti
-          confettiCount={50}
-          duration={3000}
-          untilStopped={true}
-        />
-      )}
     </LinearGradient>
+    
+    {/* Confetti Celebration - On top of everything */}
+    {showConfetti && (
+      <Confetti
+        confettiCount={50}
+        duration={3000}
+        untilStopped={true}
+      />
+    )}
+  </>
   );
 };
 
