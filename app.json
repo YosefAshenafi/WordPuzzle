@@ -1,12 +1,11 @@
 {
   "expo": {
-    "name": "Bible Puzzle Quest",
-    "slug": "bible-puzzle-quest",
+"name": "BiblePuzzleQuest",
+  "slug": "bible-puzzle-quest",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "automatic",
-
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -25,9 +24,7 @@
       "favicon": "./src/assets/favicon.png"
     },
     "plugins": [
-      [
-        "@react-native-google-signin/google-signin"
-      ]
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true

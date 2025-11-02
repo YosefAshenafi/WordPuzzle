@@ -7,7 +7,7 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>$(DEVELOPMENT_LANGUAGE)</string>
     <key>CFBundleDisplayName</key>
-    <string>Bible Puzzle Quest</string>
+    <string>BiblePuzzleQuest</string>
     <key>CFBundleExecutable</key>
     <string>$(EXECUTABLE_NAME)</string>
     <key>CFBundleIdentifier</key>
@@ -45,7 +45,7 @@
       <true/>
     </dict>
     <key>NSMicrophoneUsageDescription</key>
-    <string>Allow Bible Puzzle Quest to access your microphone.</string>
+    <string>Allow $(PRODUCT_NAME) to access your microphone</string>
     <key>RCTNewArchEnabled</key>
     <true/>
     <key>UILaunchStoryboardName</key>

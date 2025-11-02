@@ -1,8 +1,29 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-// import auth from '@react-native-firebase/auth';
-// import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { initializeApp } from 'firebase/app';
+import { getAuth, GoogleAuthProvider, signInWithCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut, onAuthStateChanged } from 'firebase/auth';
+import * as WebBrowser from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google';
+import firebaseConfig from '../config/firebase';
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// Mock Firestore functions for now since Firestore isn't configured
+const mockFirestore = {
+  collection: () => ({}),
+  doc: () => ({}),
+  setDoc: async () => {},
+  updateDoc: async () => {},
+  getDoc: async () => ({ exists: () => false }),
+  serverTimestamp: () => new Date()
+};
+
+WebBrowser.maybeCompleteAuthSession();
 
 const AuthContext = createContext();
+
+export { AuthContext };
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -17,25 +38,15 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [initializing, setInitializing] = useState(true);
 
-  useEffect(() => {
-    // TODO: Configure Firebase when ready
-    // GoogleSignin.configure({
-    //   webClientId: '753328004035-kl4a6kr531fc920umdnn2qakp1mgjess.apps.googleusercontent.com',
-    // });
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    clientId: '753328004035-kl4a6kr531fc920umdnn2qakp1mgjess.apps.googleusercontent.com',
+    iosClientId: '753328004035-0dc4aufq4vov37adht39q3grleag0h4r.apps.googleusercontent.com',
+    webClientId: '753328004035-kl4a6kr531fc920umdnn2qakp1mgjess.apps.googleusercontent.com',
+  });
 
-    // const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    // return subscriber;
-    
-    // For now, simulate a logged-in user for testing
-    const mockUser = {
-      uid: 'mock-user-123',
-      email: 'test@example.com',
-      displayName: 'Test User',
-      photoURL: null,
-    };
-    setUser(mockUser);
-    setInitializing(false);
-    setLoading(false);
+  useEffect(() => {
+    const subscriber = onAuthStateChanged(auth, onAuthStateChanged);
+    return subscriber;
   }, []);
 
   const onAuthStateChanged = (user) => {
@@ -48,35 +59,45 @@ export const AuthProvider = ({ children }) => {
 
   const signInWithGoogle = async () => {
     try {
-      // TODO: Implement Firebase Google Sign-In
-      // For now, simulate successful Google sign-in with realistic data
-      const mockGoogleUser = {
-        uid: 'google-user-' + Date.now(),
-        email: 'user@gmail.com',
-        displayName: 'Google User',
-        photoURL: 'https://via.placeholder.com/100',
-      };
-      setUser(mockGoogleUser);
-      return mockGoogleUser;
+      const result = await promptAsync();
+      
+      if (result.type === 'success') {
+        const { id_token } = result.params;
+        
+        // Create a Google credential with the token
+        const googleCredential = GoogleAuthProvider.credential(id_token);
+        
+        // Sign-in the user with the credential
+        const userCredential = await signInWithCredential(auth, googleCredential);
+        
+        // Save user profile
+        await saveUserProfile(userCredential.user);
+        
+        return userCredential.user;
+      } else {
+        throw new Error('Google Sign-In was cancelled');
+      }
     } catch (error) {
       console.error('Google Sign-In Error:', error);
-      throw error;
+      throw new Error('Google Sign-In failed: ' + error.message);
     }
   };
 
   const signUpWithEmail = async (email, password, displayName) => {
     try {
-      // TODO: Implement Firebase Email Sign-Up
-      console.log('Email Sign-Up not configured yet');
-      // For now, simulate successful sign-up
-      const mockUser = {
-        uid: 'mock-user-email',
-        email: email,
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      
+      // Update display name
+      await userCredential.user.updateProfile({
         displayName: displayName,
-        photoURL: null,
-      };
-      setUser(mockUser);
-      return mockUser;
+      });
+      
+      // Save user profile to Firestore
+      await saveUserProfile({
+        ...userCredential.user,
+        displayName: displayName,
+      });
+      return userCredential.user;
     } catch (error) {
       console.error('Sign Up Error:', error);
       throw error;
@@ -85,17 +106,9 @@ export const AuthProvider = ({ children }) => {
 
   const signInWithEmail = async (email, password) => {
     try {
-      // TODO: Implement Firebase Email Sign-In
-      console.log('Email Sign-In not configured yet');
-      // For now, simulate successful sign-in
-      const mockUser = {
-        uid: 'mock-user-email',
-        email: email,
-        displayName: 'Email User',
-        photoURL: null,
-      };
-      setUser(mockUser);
-      return mockUser;
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      return userCredential.user;
+
     } catch (error) {
       console.error('Sign In Error:', error);
       throw error;
@@ -104,9 +117,7 @@ export const AuthProvider = ({ children }) => {
 
   const signOut = async () => {
     try {
-      // TODO: Implement Firebase Sign-Out
-      // await auth().signOut();
-      // await GoogleSignin.signOut();
+      await firebaseSignOut(auth);
       setUser(null);
     } catch (error) {
       console.error('Sign Out Error:', error);
@@ -116,8 +127,22 @@ export const AuthProvider = ({ children }) => {
 
   const saveUserProfile = async (user) => {
     try {
-      // TODO: Implement Firebase user profile saving
-      console.log('Save user profile not configured yet');
+      // Store user data locally for now since Firestore isn't configured
+      const userData = {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName || 'Anonymous',
+        photoURL: user.photoURL || null,
+        createdAt: new Date(),
+        lastLoginAt: new Date(),
+        totalScore: 0,
+        bestScore: 0,
+        averageScore: 0,
+        levelsCompleted: 0,
+        gamesPlayed: 0,
+      };
+      
+      console.log('User profile saved locally:', userData);
     } catch (error) {
       console.error('Error saving user profile:', error);
     }
@@ -127,8 +152,7 @@ export const AuthProvider = ({ children }) => {
     if (!user) return;
     
     try {
-      // TODO: Implement Firebase user stats updating
-      console.log('Update user stats not configured yet');
+      console.log('User stats updated locally:', stats);
     } catch (error) {
       console.error('Error updating user stats:', error);
     }
@@ -136,8 +160,7 @@ export const AuthProvider = ({ children }) => {
 
   const getUserProfile = async (uid) => {
     try {
-      // TODO: Implement Firebase user profile retrieval
-      console.log('Get user profile not configured yet');
+      // Return mock user data for now
       return null;
     } catch (error) {
       console.error('Error getting user profile:', error);

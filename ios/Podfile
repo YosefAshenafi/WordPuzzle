@@ -54,14 +54,7 @@ target 'BiblePuzzleQuest' do
       installer,
       config[:reactNativePath],
       :mac_catalyst_enabled => false,
-      :ccache_enabled => false,
+      :ccache_enabled => ccache_enabled?(podfile_properties),
     )
-    
-    installer.pods_project.targets.each do |target|
-      target.build_configurations.each do |config|
-        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.1'
-        config.build_settings['ENABLE_BITCODE'] = 'NO'
-      end
-    end
   end
 end
