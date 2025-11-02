@@ -23,7 +23,8 @@ export const GameOverModal = ({
   levelTitle,
   restartCount,
   maxMoves,
-  timeTaken = 0
+  timeTaken = 0,
+  isTimeUp = false
 }) => {
   const [showQuiz, setShowQuiz] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -202,11 +203,11 @@ export const GameOverModal = ({
               {!showQuiz ? (
                 // Game Over Screen
                 <View style={styles.content}>
-                  {/* Header */}
-                  <View style={styles.header}>
-                    <Text style={styles.title}>⏰ Out of Moves!</Text>
-                    <Text style={styles.subtitle}>{levelTitle}</Text>
-                  </View>
+                   {/* Header */}
+                   <View style={styles.header}>
+                     <Text style={styles.title}>{isTimeUp ? '⏰ Time\'s Up!' : '⏰ Out of Moves!'}</Text>
+                     <Text style={styles.subtitle}>{levelTitle}</Text>
+                   </View>
 
 {/* Stats */}
                   <View style={styles.statsContainer}>
@@ -224,15 +225,18 @@ export const GameOverModal = ({
                     </View>
                   </View>
 
-                  {/* Message */}
-                  <View style={styles.messageContainer}>
-                    <Text style={styles.messageText}>
-                      The path was challenging, but wisdom comes through perseverance!
-                    </Text>
-                    <Text style={styles.challengeText}>
-                      Answer a biblical question to earn another chance!
-                    </Text>
-                  </View>
+                   {/* Message */}
+                   <View style={styles.messageContainer}>
+                     <Text style={styles.messageText}>
+                       {isTimeUp 
+                         ? 'Time ran out, but every moment is a learning opportunity!'
+                         : 'The path was challenging, but wisdom comes through perseverance!'
+                       }
+                     </Text>
+                     <Text style={styles.challengeText}>
+                       Answer a biblical question to earn another chance!
+                     </Text>
+                   </View>
 
                   {/* Action Buttons */}
                   <View style={styles.buttonsContainer}>

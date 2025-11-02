@@ -66,8 +66,9 @@ export const GameScreen = ({ route, navigation }) => {
   const [showStory, setShowStory] = useState(false);
   const [showFlipCard, setShowFlipCard] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
-  const [timer, setTimer] = useState(0);
+  const [timer, setTimer] = useState(300); // 5 minutes in seconds
   const [showGameOver, setShowGameOver] = useState(false);
+  const [isTimeUp, setIsTimeUp] = useState(false);
   const [restartCount, setRestartCount] = useState(0);
   const [showHints, setShowHints] = useState(false);
   const [hintsRemaining, setHintsRemaining] = useState(3);
@@ -96,13 +97,22 @@ export const GameScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     let interval;
-    if (gameStarted && !isComplete) {
+    if (gameStarted && !isComplete && timer > 0) {
       interval = setInterval(() => {
-        setTimer((t) => t + 1);
+        setTimer((t) => {
+          if (t <= 1) {
+            // Time's up - show game over
+            setIsTimeUp(true);
+            setShowGameOver(true);
+            setGameStarted(false);
+            return 0;
+          }
+          return t - 1;
+        });
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [gameStarted, isComplete]);
+  }, [gameStarted, isComplete, timer]);
 
   // Auto-save game state when it changes
   useEffect(() => {
@@ -142,7 +152,7 @@ const initializeGame = (isContinue = false) => {
           // Restore saved state
           setTiles(savedState.tiles);
           setMoveCount(savedState.moveCount);
-          setTimer(savedState.timer);
+          setTimer(savedState.timer || 300); // Default to 5 minutes if not saved
           setGameStarted(true);
           setIsComplete(false);
           setShowHints(savedState.showHints || false);
@@ -165,7 +175,7 @@ const initializeGame = (isContinue = false) => {
     const newTiles = generatePuzzleTiles(safeLevel.gridSize, restartCount, safeLevel.id);
     setTiles(newTiles);
     setMoveCount(0);
-    setTimer(0);
+    setTimer(300); // Reset to 5 minutes
     setGameStarted(true); // Set to true so puzzle shows
     setIsComplete(false);
     setShowHints(false);
@@ -196,6 +206,7 @@ const initializeGame = (isContinue = false) => {
     if (isPuzzleSolved(newTiles)) {
       completeLevel(newMoveCount);
     } else if (newMoveCount >= safeLevel.moves) {
+      setIsTimeUp(false);
       setShowGameOver(true);
       setGameStarted(false);
     }
@@ -303,6 +314,7 @@ setTimeout(() => {
 
   const handleRetryFromQuiz = () => {
     setShowGameOver(false);
+    setIsTimeUp(false);
     setRestartCount(restartCount + 1);
     initializeGame();
   };
@@ -402,9 +414,11 @@ setTimeout(() => {
             >
               <Text style={styles.soundIcon}>{soundEnabled ? '🔊' : '🔇'}</Text>
             </TouchableOpacity>
-            <View style={styles.timerBox}>
-              <Text style={styles.timerText}>{formatTime(timer)}</Text>
-            </View>
+            <View style={[styles.timerBox, timer <= 60 && styles.timerBoxWarning]}>
+               <Text style={[styles.timerText, timer <= 60 && styles.timerTextWarning]}>
+                 {formatTime(timer)}
+               </Text>
+             </View>
           </View>
         </View>
 
@@ -488,7 +502,8 @@ setTimeout(() => {
         levelTitle={safeLevel.title}
         restartCount={restartCount}
         maxMoves={safeLevel.moves}
-        timeTaken={timer}
+        timeTaken={300 - timer} // Show elapsed time
+        isTimeUp={isTimeUp}
       />
       </SafeAreaView>
     </LinearGradient>
@@ -561,10 +576,16 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 8,
   },
+  timerBoxWarning: {
+    backgroundColor: '#EF4444', // Red color for warning
+  },
   timerText: {
     fontSize: 16,
     fontWeight: 'bold',
     color: COLORS.darker,
+  },
+  timerTextWarning: {
+    color: COLORS.white,
   },
   verseContainer: {
     backgroundColor: COLORS.white + '15',

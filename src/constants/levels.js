@@ -1,39 +1,77 @@
 // Local image paths for React Native
+import samsonImg from '../assets/images/samson.png';
+import eyesusImg from '../assets/images/eyesus.png';
+import kalunImg from '../assets/images/the-word.png';
 import creationImg from '../assets/images/creation.png';
-import noahArkImg from '../assets/images/noah-ark.png';
-import davidGoliathImg from '../assets/images/david-goliath.png';
-import danielLionsImg from '../assets/images/daniel-lions.png';
-import jesusStormImg from '../assets/images/jesus-storm.png';
-import resurrectionImg from '../assets/images/resurrection.png';
+import alemhuluImg from '../assets/images/all-the-world.png';
+import songToJesusImg from '../assets/images/song-to-jesus.png';
 
 // Fallback remote URLs for tunnel mode
 const REMOTE_IMAGE_BASE = 'https://expo.dev/assets/assets/?platform=ios&hash='; // This would need actual asset hashes
 
 // Local sound paths for React Native
-import creationSound from '../assets/sounds/creation.mp3';
+// Temporarily disabled for testing
+// import samsonSound from '../assets/sounds/samson.MP3';
+// import eyesusSound from '../assets/sounds/eyesus.MP3';
+// import kalunSound from '../assets/sounds/the-word.MP3';
+// import creationSound from '../assets/sounds/creation.mp3';
+// import alemhuluSound from '../assets/sounds/all-the-world.MP3';
+// import songToJesusSound from '../assets/sounds/song-to-jesus.MP3';
 
 const images = {
+  samson: samsonImg,
+  eyesus: eyesusImg,
+  kalun: kalunImg,
   creation: creationImg,
-  'noah-ark': noahArkImg,
-  'david-goliath': davidGoliathImg,
-  'daniel-lions': danielLionsImg,
-  'jesus-storm': jesusStormImg,
-  resurrection: resurrectionImg,
+  alemhulu: alemhuluImg,
+  songToJesus: songToJesusImg,
 };
 
 const sounds = {
-  creation: creationSound,
-  // Add more sounds as they become available
-  // 'noah-ark': noahArkSound,
-  // 'david-goliath': davidGoliathSound,
-  // 'daniel-lions': danielLionsSound,
-  // 'jesus-storm': jesusStormSound,
-  // 'resurrection': resurrectionSound,
+  samson: null,
+  eyesus: null,
+  kalun: null,
+  creation: null,
+  alemhulu: null,
+  songToJesus: null,
 };
 
 export const LEVELS = [
   {
     id: 1,
+    title: 'Samson',
+    bibleRef: 'Judges 13-16',
+    verse: '"The Spirit of the Lord came powerfully upon him." - Judges 14:6',
+    image: images.samson,
+    sound: sounds.samson,
+    story: `Samson was a Nazirite dedicated to God from birth, blessed with supernatural strength. He fought against the Philistines who oppressed Israel. With God's power, he killed a lion with his bare hands, defeated 1,000 Philistines with a donkey's jawbone, and tore down the gates of Gaza. Though he was betrayed by Delilah and lost his strength when his hair was cut, Samson repented and God restored his power for one final act. In his death, he destroyed more Philistines than in his entire life, demonstrating God's mercy and redemption.`,
+    moves: 50,
+    gridSize: 4,
+  },
+  {
+    id: 2,
+    title: 'Jesus',
+    bibleRef: 'Matthew 1-28',
+    verse: '"For God so loved the world that he gave his one and only Son." - John 3:16',
+    image: images.eyesus,
+    sound: sounds.eyesus,
+    story: `Jesus Christ, the Son of God, came to earth to save humanity from sin. He taught about God's love, healed the sick, fed the hungry, and performed many miracles. He showed compassion to outcasts and challenged religious hypocrisy. Jesus willingly died on the cross as a sacrifice for our sins, was buried, and rose again on the third day. His resurrection offers forgiveness, eternal life, and hope to all who believe in Him. Jesus is the way, the truth, and the life.`,
+    moves: 60,
+    gridSize: 5,
+  },
+  {
+    id: 3,
+    title: 'The Word',
+    bibleRef: 'Exodus 20',
+    verse: '"You shall have no other gods before me." - Exodus 20:3',
+    image: images.kalun,
+    sound: sounds.kalun,
+    story: `The Ten Commandments were given by God to Moses on Mount Sinai, serving as fundamental moral laws for humanity. These commandments teach us to love God above all else, honor our parents, and respect others. They guide us in living righteous lives by prohibiting murder, adultery, theft, false witness, and coveting. Jesus summarized these laws with two great commandments: to love God with all our heart, soul, and mind, and to love our neighbor as ourselves. These timeless principles continue to guide believers in faith and conduct.`,
+    moves: 55,
+    gridSize: 4,
+  },
+  {
+    id: 4,
     title: 'Creation',
     bibleRef: 'Genesis 1',
     verse: '"In the beginning God created the heavens and the earth." - Genesis 1:1',
@@ -44,54 +82,26 @@ export const LEVELS = [
     gridSize: 4,
   },
   {
-    id: 2,
-    title: "Noah's Ark",
-    bibleRef: 'Genesis 6-9',
-    verse: '"The Lord is righteous in all his ways and faithful in all he does." - Psalm 145:17',
-    image: images['noah-ark'],
-    story: `God saw that the earth was filled with wickedness and decided to send a great flood. He commanded Noah, a righteous man, to build an ark and bring two of every kind of animal into it, along with his family. For 40 days and 40 nights, rain fell upon the earth. When the waters receded, the ark rested on the mountains of Ararat. God made a covenant with Noah, placing a rainbow in the sky as a sign that He would never destroy the earth by flood again.`,
-    moves: 50,
-    gridSize: 4,
-  },
-  {
-    id: 3,
-    title: 'David and Goliath',
-    bibleRef: '1 Samuel 17',
-    verse: '"The Lord who delivered me from the paw of the lion and the paw of the bear will deliver me from the hand of this Philistine." - 1 Samuel 17:37',
-    image: images['david-goliath'],
-    story: `The giant Goliath challenged the Israelites to send a champion to fight him. All the soldiers were afraid, but young David, a shepherd boy, accepted the challenge. Armed only with his sling and five smooth stones, David faced the mighty Goliath. With faith in God, David hurled a stone that struck Goliath in the forehead, and the giant fell. David's courage and trust in the Lord showed that size and strength are nothing compared to faith in God.`,
-    moves: 50,
-    gridSize: 4,
-  },
-  {
-    id: 4,
-    title: "Daniel's Faith",
-    bibleRef: 'Daniel 6',
-    verse: '"My God sent his angel, and he shut the mouths of the lions." - Daniel 6:22',
-    image: images['daniel-lions'],
-    story: `King Darius made a law that no one could pray to any god except him. Daniel, a faithful servant of God, continued to pray to the Lord three times daily. He was thrown into a den of lions as punishment. But God sent an angel to shut the lions' mouths, and they did not harm Daniel. The next morning, Daniel emerged unharmed. King Darius saw the power of God and issued a new decree honoring the God of Daniel.`,
-    moves: 65,
-    gridSize: 5,
-  },
-{
     id: 5,
-    title: 'Jesus Calms the Storm',
-    bibleRef: 'Mark 4:35-41',
-    verse: '"He got up, rebuked the wind and said to the waves, "Quiet! Be still!" Then the wind died down and it was completely calm." - Mark 4:39',
-    image: images['jesus-storm'],
-    story: `Jesus and His disciples were crossing the Sea of Galilee when a fierce storm arose, with waves crashing over the boat. The disciples were afraid and woke Jesus, who was sleeping. Jesus rose and rebuked the wind, saying "Peace, be still." Immediately, the storm ceased, and there was great calm. Jesus asked His disciples why they had no faith, and they marveled, saying "What kind of man is this, that even the wind and sea obey Him?"`,
-    moves: 70,
+    title: 'All The World',
+    bibleRef: 'Genesis 2-3',
+    verse: '"The Lord God made garments of skin for Adam and his wife and clothed them." - Genesis 3:21',
+    image: images.alemhulu,
+    sound: sounds.alemhulu,
+    story: `Adam and Eve were the first humans created by God, placed in the perfect Garden of Eden. They walked with God in harmony and had everything they needed. However, they were tempted by the serpent to disobey God's command not to eat from the Tree of Knowledge. Their sin brought shame, separation from God, and expulsion from the garden. Yet even in judgment, God showed mercy by promising a Savior and providing clothing. This story reminds us of human fallibility and God's unfailing grace and redemption plan.`,
+    moves: 65,
     gridSize: 5,
   },
   {
     id: 6,
-    title: 'Resurrection',
-    bibleRef: 'Luke 24',
-    verse: '"He is not here; he has risen, just as he said!" - Matthew 28:6',
-    image: images.resurrection,
-    story: `After Jesus was crucified, His body was placed in a tomb. On the third day, women came to anoint Him with spices, but found the stone rolled away. An angel told them: "He is not here; He has risen!" Jesus appeared to His disciples and many others over 40 days, proving He was alive. His resurrection defeated death and sin, offering all who believe in Him eternal life and hope.`,
-    moves: 75,
-    gridSize: 6,
+    title: 'Song To Jesus',
+    bibleRef: 'Psalm 150',
+    verse: '"Let everything that has breath praise the Lord." - Psalm 150:6',
+    image: images.songToJesus,
+    sound: sounds.songToJesus,
+    story: `Music and praise have always been integral to worship and spiritual expression. Throughout the Bible, we see people singing songs of praise to God, from David's psalms to the angels' announcement at Jesus' birth. Music lifts our spirits, helps us focus on God's goodness, and allows us to express emotions that words alone cannot capture. When we sing to Jesus, we join a timeless chorus of believers throughout history who have used melody and rhythm to honor God, share His love, and experience His presence in a profound way.`,
+    moves: 55,
+    gridSize: 4,
   },
 ];
 
