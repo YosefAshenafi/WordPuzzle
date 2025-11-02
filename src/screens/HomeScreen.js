@@ -450,7 +450,7 @@ const styles = StyleSheet.create({
   appIcon: {
     width: 600,
     height: 300,
-    marginBottom: 16,
+    marginBottom: 5,
   },
   title: {
     fontSize: 42,
