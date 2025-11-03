@@ -134,14 +134,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   appIcon: {
-    width: width * 0.5,
-    height: width * 0.5,
+    width: width * 0.8,
+    height: width * 0.8,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: 8,
     },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
+    shadowOpacity: 0.4,
+    shadowRadius: 16,
   },
 });

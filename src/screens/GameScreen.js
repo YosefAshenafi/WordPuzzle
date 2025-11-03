@@ -82,6 +82,7 @@ export const GameScreen = ({ route, navigation }) => {
   const [totalAttempts, setTotalAttempts] = useState(0);
   const [timerEnabled, setTimerEnabled] = useState(true);
   const [dynamicMoveLimit, setDynamicMoveLimit] = useState(safeLevel.moves || 50);
+  const [quizAnswered, setQuizAnswered] = useState(false);
 
   const victoryScale = useRef(new Animated.Value(0)).current;
   const verseGlow = useRef(new Animated.Value(0)).current;
@@ -162,11 +163,14 @@ export const GameScreen = ({ route, navigation }) => {
         timer,
         showHints,
         hintsRemaining,
+        showGameOver,
+        isTimeUp,
+        quizAnswered,
         timestamp: Date.now()
       };
       saveCurrentGameState(safeLevel.id, gameState);
     }
-  }, [tiles, moveCount, timer, showHints, hintsRemaining, gameStarted, isComplete]);
+  }, [tiles, moveCount, timer, showHints, hintsRemaining, gameStarted, isComplete, showGameOver, isTimeUp, quizAnswered]);
 
   // Auto-save game state when it changes
   useEffect(() => {
@@ -177,13 +181,17 @@ export const GameScreen = ({ route, navigation }) => {
         timer,
         showHints,
         hintsRemaining,
+        showGameOver,
+        isTimeUp,
+        quizAnswered,
         timestamp: Date.now()
       };
       saveCurrentGameState(safeLevel.id, gameState);
     }
-  }, [tiles, moveCount, timer, showHints, hintsRemaining, gameStarted, isComplete]);
+  }, [tiles, moveCount, timer, showHints, hintsRemaining, gameStarted, isComplete, showGameOver, isTimeUp, quizAnswered]);
 
 const initializeGame = async (isContinue = false) => {
+    setQuizAnswered(false); // Reset quiz answered state
     if (isContinue) {
       // Try to load saved game state
       const savedState = await loadCurrentGameState(safeLevel.id);
@@ -207,14 +215,31 @@ const initializeGame = async (isContinue = false) => {
         setTimerEnabled(newTimerEnabled);
         setDynamicMoveLimit(newMoveLimit);
         
-        // Restore saved state
-        setTiles(savedState.tiles);
-        setMoveCount(savedState.moveCount);
-        setTimer(savedState.timer || (newTimerEnabled ? 240 : 999999));
-        setGameStarted(true);
-        setIsComplete(false);
-        setShowHints(savedState.showHints || false);
-        setHintsRemaining(savedState.hintsRemaining !== undefined ? savedState.hintsRemaining : 2);
+        // Check if saved game was over and quiz wasn't answered
+        if (savedState.showGameOver && !savedState.quizAnswered) {
+          // Game was over and quiz not answered - show game over modal
+          setShowGameOver(true);
+          setIsTimeUp(savedState.isTimeUp || false);
+          setGameStarted(false);
+          setQuizAnswered(false);
+          // Still restore the game state for display
+          setTiles(savedState.tiles);
+          setMoveCount(savedState.moveCount);
+          setTimer(savedState.timer || (newTimerEnabled ? 240 : 999999));
+          setIsComplete(false);
+          setShowHints(savedState.showHints || false);
+          setHintsRemaining(savedState.hintsRemaining !== undefined ? savedState.hintsRemaining : 2);
+        } else {
+          // Normal continue - restore saved state
+          setTiles(savedState.tiles);
+          setMoveCount(savedState.moveCount);
+          setTimer(savedState.timer || (newTimerEnabled ? 240 : 999999));
+          setGameStarted(true);
+          setIsComplete(false);
+          setShowHints(savedState.showHints || false);
+          setHintsRemaining(savedState.hintsRemaining !== undefined ? savedState.hintsRemaining : 2);
+          setQuizAnswered(savedState.quizAnswered || false);
+        }
         
         // Load and play level sound when continuing game (non-blocking)
         if (safeLevel.sound) {
@@ -237,6 +262,7 @@ const initializeGame = async (isContinue = false) => {
   };
 
   const startFreshGame = async () => {
+    setQuizAnswered(false); // Reset quiz answered state
     // Load total attempts and increment for this new game
     const attempts = await incrementAttemptCount(safeLevel.id);
     setTotalAttempts(attempts);
@@ -280,6 +306,11 @@ const initializeGame = async (isContinue = false) => {
   };
 
   const handleTilePress = (index1, index2) => {
+    // Check if game is over and quiz hasn't been answered
+    if (showGameOver && !quizAnswered) {
+      return;
+    }
+    
     if (!isValidMove(index1, index2, safeLevel.gridSize, tiles)) {
       return;
     }
@@ -295,6 +326,7 @@ const initializeGame = async (isContinue = false) => {
       setIsTimeUp(false);
       setShowGameOver(true);
       setGameStarted(false);
+      setQuizAnswered(false); // Reset quiz answered state when game over
     }
   };
 
@@ -372,8 +404,10 @@ setTimeout(() => {
     initializeGame(false); // Start fresh game
   };
 
-  const handleBackToLevels = () => {
+  const handleBackToLevels = async () => {
     setShowGameOver(false);
+    // Clear saved game state when player chooses to go back
+    await clearCurrentGameState(safeLevel.id);
     navigation.goBack();
   };
 
@@ -402,6 +436,15 @@ setTimeout(() => {
     setShowGameOver(false);
     setIsTimeUp(false);
     setRestartCount(restartCount + 1);
+    setQuizAnswered(true); // Mark quiz as answered
+    initializeGame();
+  };
+
+  const handleSkipQuiz = () => {
+    setShowGameOver(false);
+    setIsTimeUp(false);
+    setRestartCount(restartCount + 1);
+    setQuizAnswered(true); // Mark quiz as answered
     initializeGame();
   };
 
@@ -651,13 +694,18 @@ setTimeout(() => {
 
       <GameOverModal
         visible={showGameOver}
-        onClose={() => setShowGameOver(false)}
+        onClose={async () => {
+          setShowGameOver(false);
+          // Clear saved game state when player closes modal
+          await clearCurrentGameState(safeLevel.id);
+        }}
         onRetry={handleRetryFromQuiz}
+        onSkipQuiz={handleSkipQuiz}
         onBackToLevels={handleBackToLevels}
         levelTitle={safeLevel.title}
         restartCount={restartCount}
         maxMoves={dynamicMoveLimit}
-        timeTaken={240 - timer} // Show elapsed time
+        timeTaken={isTimeUp ? 240 - timer : moveCount} // Show elapsed time or moves used
         isTimeUp={isTimeUp}
       />
       </SafeAreaView>

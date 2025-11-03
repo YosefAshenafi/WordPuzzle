@@ -66,6 +66,7 @@ const translations = {
       timesUp: "Time's Up!",
       outOfMoves: "Out of Moves!",
       time: "Time",
+      moves: "Moves",
       restarts: "Restarts",
       status: "Status",
       incomplete: "Incomplete",
@@ -73,12 +74,14 @@ const translations = {
       pathChallenging: "The path was challenging, but wisdom comes through perseverance!",
       answerToRetry: "Answer a biblical question to earn another chance!",
       answerToRetryButton: "Answer to Retry",
-      backToLevels: "← Back to Levels",
+      continueAnyway: "⚡ Continue Anyway",
+      backToLevels: "Back to Levels",
       divineWisdom: "📖 Divine Wisdom",
       answerCorrectlyToRetry: "Answer correctly to retry!",
       timesUpQuiz: "⏰ Time's up!",
       correctRetrying: "🎉 Correct! Retrying level...",
       notQuiteRight: "❌ Not quite right. Try again later!",
+      skipContinue: "⚡ Skip & Continue",
     },
     // Quiz Modal
     quiz: {
@@ -198,6 +201,7 @@ const translations = {
       timesUp: "ሰዓት አልቋል!",
       outOfMoves: "እንቅስቃሴዎች ጨርሰዋል!",
       time: "ሰዓት",
+      moves: "እንቅስቃሴዎች",
       restarts: "እንደገናዎች",
       status: "ሁኔታ",
       incomplete: "አልተጠናቀቀም",
@@ -205,7 +209,7 @@ const translations = {
       pathChallenging: "መንገዱው አስቸጋሪ ነበር ጥበብ በቋሚነት ይመጣል!",
       answerToRetry: "ሌላ እንደገና ለመሞከር የመጽሐፍ ቅዱስ ጥያቄዎቹን ይመልሱ!",
       answerToRetryButton: "ድጋሚ ለመሞከር ይመልሱ",
-      backToLevels: "← ወደ ደረጃዎች ይመለሱ",
+      backToLevels: "ወደ ደረጃዎች ይመለሱ",
       divineWisdom: "📖 የእግዚእብሔር ጥበብ",
       answerCorrectlyToRetry: "እንደገና ለመሞከር በትክክል ይመልሱ!",
       timesUpQuiz: "⏰ ስዓት አልቋል!",
@@ -226,6 +230,7 @@ const translations = {
       wisdomGranted: "🙏 ጥበብ ተሰጠ! አዲስ ጉዞ በመጀመር ላይ...",
       seekAnswerTryAgain: "📚 መልስ ይፈልጉ እና በድጋሜ ይሞክሩ!",
       chooseWisely: "⚡ በጥንቃቄ ይምረጡ - ለመቀጠል በትክክል መመለስ አለብዎት!",
+      skipContinue: "በማስታወር ይቀጥሉ",
     },
     // Story Modal
     story: {

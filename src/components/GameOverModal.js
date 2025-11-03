@@ -21,6 +21,7 @@ export const GameOverModal = ({
   onClose,
   onRetry,
   onBackToLevels,
+  onSkipQuiz,
   levelTitle,
   restartCount,
   maxMoves,
@@ -123,7 +124,7 @@ export const GameOverModal = ({
     }, 2000);
   };
 
-  const handleAnswerSelect = (answerIndex) => {
+   const handleAnswerSelect = (answerIndex) => {
     if (showResult) return;
     
     setSelectedAnswer(answerIndex);
@@ -144,6 +145,11 @@ export const GameOverModal = ({
         setShowQuiz(false);
       }, 2000);
     }
+  };
+
+  const handleSkipQuiz = () => {
+    setShowQuiz(false);
+    onSkipQuiz();
   };
 
   const handleRetryWithQuiz = () => {
@@ -169,6 +175,7 @@ export const GameOverModal = ({
   };
 
   const formatTime = (seconds) => {
+    if (seconds < 0) seconds = 0;
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
@@ -214,8 +221,8 @@ export const GameOverModal = ({
 {/* Stats */}
                    <View style={styles.statsContainer}>
                      <View style={styles.statBox}>
-                       <Text style={styles.statLabel}>⏱️ {t('gameOver.time')}</Text>
-                       <Text style={styles.statValue}>{formatTime(timeTaken)}</Text>
+                       <Text style={styles.statLabel}>{isTimeUp ? '⏱️ ' + t('gameOver.time') : '🎯 ' + t('gameOver.moves')}</Text>
+                       <Text style={styles.statValue}>{isTimeUp ? formatTime(timeTaken) : `${timeTaken}`}</Text>
                      </View>
                      <View style={styles.statBox}>
                        <Text style={styles.statLabel}>🔄 {t('gameOver.restarts')}</Text>
@@ -230,24 +237,24 @@ export const GameOverModal = ({
                       </Text>
                     </View>
 
-                  {/* Action Buttons */}
-                  <View style={styles.buttonsContainer}>
-                     <TouchableOpacity
-                       style={styles.retryButton}
-                       onPress={handleRetryWithQuiz}
-                       activeOpacity={0.8}
-                     >
-                       <Text style={styles.retryButtonText}>{t('gameOver.answerToRetryButton')}</Text>
-                     </TouchableOpacity>
-                     
-                     <TouchableOpacity
-                       style={styles.backButton}
-                       onPress={onBackToLevels}
-                       activeOpacity={0.8}
-                     >
-                       <Text style={styles.backButtonText}>← {t('gameOver.backToLevels')}</Text>
-                     </TouchableOpacity>
-                  </View>
+                   {/* Action Buttons */}
+                   <View style={styles.buttonsContainer}>
+<TouchableOpacity
+                         style={styles.retryButton}
+                         onPress={handleRetryWithQuiz}
+                         activeOpacity={0.8}
+                       >
+                         <Text style={styles.retryButtonText}>{t('gameOver.answerToRetryButton')}</Text>
+                       </TouchableOpacity>
+                      
+                      <TouchableOpacity
+                        style={styles.backButton}
+                        onPress={onBackToLevels}
+                        activeOpacity={0.8}
+                      >
+                        <Text style={styles.backButtonText}>← {t('gameOver.backToLevels')}</Text>
+                      </TouchableOpacity>
+                   </View>
                 </View>
               ) : (
                 // Quiz Screen
@@ -290,57 +297,68 @@ export const GameOverModal = ({
                     <Text style={styles.reference}>📜 {currentQuestion?.reference}</Text>
                   </View>
 
-                  {/* Answer Options */}
-                  <View style={styles.answersContainer}>
-                    {currentQuestion?.options.map((option, index) => {
-                      const isCorrect = index === currentQuestion.correctAnswer;
-                      const isSelected = index === selectedAnswer;
-                      
-                      let buttonStyle = styles.answerButton;
-                      let textStyle = styles.answerText;
-                      let icon = '⭕';
-                      
-                      if (showResult) {
-                        if (isCorrect) {
-                          buttonStyle = styles.correctAnswer;
-                          textStyle = styles.correctAnswerText;
-                          icon = '✅';
-                        } else if (isSelected && !isCorrect) {
-                          buttonStyle = styles.wrongAnswer;
-                          textStyle = styles.wrongAnswerText;
-                          icon = '❌';
-                        }
-                      }
-                      
-                      return (
-                        <TouchableOpacity
-                          key={index}
-                          style={[buttonStyle, { transform: [{ translateX: shakeAnim }] }]}
-                          onPress={() => handleAnswerSelect(index)}
-                          disabled={showResult}
-                          activeOpacity={0.8}
-                        >
-                          <View style={styles.answerContent}>
-                            <Text style={styles.answerIcon}>{icon}</Text>
-                            <Text style={textStyle}>{option}</Text>
-                          </View>
-                        </TouchableOpacity>
-                      );
-                    })}
-                  </View>
+                   {/* Answer Options */}
+                   <View style={styles.answersContainer}>
+                     {currentQuestion?.options.map((option, index) => {
+                       const isCorrect = index === currentQuestion.correctAnswer;
+                       const isSelected = index === selectedAnswer;
+                       
+                       let buttonStyle = styles.answerButton;
+                       let textStyle = styles.answerText;
+                       let icon = '⭕';
+                       
+                       if (showResult) {
+                         if (isCorrect) {
+                           buttonStyle = styles.correctAnswer;
+                           textStyle = styles.correctAnswerText;
+                           icon = '✅';
+                         } else if (isSelected && !isCorrect) {
+                           buttonStyle = styles.wrongAnswer;
+                           textStyle = styles.wrongAnswerText;
+                           icon = '❌';
+                         }
+                       }
+                       
+                       return (
+                         <TouchableOpacity
+                           key={index}
+                           style={[buttonStyle, { transform: [{ translateX: shakeAnim }] }]}
+                           onPress={() => handleAnswerSelect(index)}
+                           disabled={showResult}
+                           activeOpacity={0.8}
+                         >
+                           <View style={styles.answerContent}>
+                             <Text style={styles.answerIcon}>{icon}</Text>
+                             <Text style={textStyle}>{option}</Text>
+                           </View>
+                         </TouchableOpacity>
+                       );
+                     })}
+                   </View>
 
-                  {/* Result Message */}
-                  {showResult && (
-                    <Animated.View style={styles.resultContainer}>
-                       {isTimedOut ? (
-                         <Text style={styles.timeoutText}>⏰ {t('gameOver.timesUpQuiz')}</Text>
-                       ) : selectedAnswer === currentQuestion.correctAnswer ? (
-                         <Text style={styles.correctText}>🎉 {t('gameOver.correctRetrying')}</Text>
-                       ) : (
-                         <Text style={styles.wrongText}>❌ {t('gameOver.notQuiteRight')}</Text>
-                       )}
-                    </Animated.View>
-                  )}
+                   {/* Skip Button for Quiz */}
+                   {!showResult && (
+                     <TouchableOpacity
+                       style={styles.skipQuizButton}
+                       onPress={handleSkipQuiz}
+                       activeOpacity={0.8}
+                     >
+                       <Text style={styles.skipQuizButtonText}>⚡ {t('gameOver.skipContinue')}</Text>
+                     </TouchableOpacity>
+                   )}
+
+                   {/* Result Message */}
+                   {showResult && (
+                     <Animated.View style={styles.resultContainer}>
+                        {isTimedOut ? (
+                          <Text style={styles.timeoutText}>⏰ {t('gameOver.timesUpQuiz')}</Text>
+                        ) : selectedAnswer === currentQuestion.correctAnswer ? (
+                          <Text style={styles.correctText}>🎉 {t('gameOver.correctRetrying')}</Text>
+                        ) : (
+                          <Text style={styles.wrongText}>❌ {t('gameOver.notQuiteRight')}</Text>
+                        )}
+                     </Animated.View>
+                   )}
                 </View>
               )}
             </LinearGradient>
@@ -502,9 +520,9 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
   },
-  buttonsContainer: {
-    gap: 16,
-  },
+   buttonsContainer: {
+     gap: 12,
+   },
   retryButton: {
     backgroundColor: COLORS.gold,
     paddingVertical: 18,
@@ -541,14 +559,36 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 6,
   },
-  backButtonText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: COLORS.white,
-    textShadowColor: COLORS.black,
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
-  },
+   backButtonText: {
+     fontSize: 18,
+     fontWeight: '600',
+     color: COLORS.white,
+     textShadowColor: COLORS.black,
+     textShadowOffset: { width: 1, height: 1 },
+     textShadowRadius: 2,
+   },
+   skipButton: {
+     backgroundColor: COLORS.accent,
+     paddingVertical: 16,
+     paddingHorizontal: 20,
+     borderRadius: 16,
+     alignItems: 'center',
+     borderWidth: 2,
+     borderColor: COLORS.accent + '80',
+     shadowColor: COLORS.black,
+     shadowOffset: { width: 0, height: 4 },
+     shadowOpacity: 0.3,
+     shadowRadius: 8,
+     elevation: 6,
+   },
+   skipButtonText: {
+     fontSize: 18,
+     fontWeight: 'bold',
+     color: COLORS.white,
+     textShadowColor: COLORS.black,
+     textShadowOffset: { width: 1, height: 1 },
+     textShadowRadius: 2,
+   },
   quizContent: {
     flex: 1,
   },
@@ -685,10 +725,33 @@ const styles = StyleSheet.create({
     color: COLORS.error,
     textAlign: 'center',
   },
-  timeoutText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: COLORS.warning,
-    textAlign: 'center',
-  },
+   timeoutText: {
+     fontSize: 18,
+     fontWeight: 'bold',
+     color: COLORS.warning,
+     textAlign: 'center',
+   },
+   skipQuizButton: {
+     backgroundColor: COLORS.accent + '30',
+     borderRadius: 12,
+     borderWidth: 2,
+     borderColor: COLORS.accent,
+     paddingVertical: 14,
+     paddingHorizontal: 20,
+     alignItems: 'center',
+     marginBottom: 16,
+     shadowColor: COLORS.black,
+     shadowOffset: { width: 0, height: 4 },
+     shadowOpacity: 0.3,
+     shadowRadius: 8,
+     elevation: 6,
+   },
+   skipQuizButtonText: {
+     fontSize: 16,
+     fontWeight: 'bold',
+     color: COLORS.accent,
+     textShadowColor: COLORS.black,
+     textShadowOffset: { width: 1, height: 1 },
+     textShadowRadius: 2,
+   },
 });

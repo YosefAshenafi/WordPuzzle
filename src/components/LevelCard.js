@@ -49,7 +49,7 @@ export const LevelCard = ({
           <LinearGradient
             colors={
               isCompleted
-                ? [COLORS.darker + '22', COLORS.darker + '11'] // Completed: Almost no overlay
+                ? ['transparent', 'transparent'] // Completed: No overlay at all
                 : isUnlocked
                 ? [COLORS.darker + '33', COLORS.darker + '22'] // Unlocked: Very minimal overlay
                 : [COLORS.darker + 'DD', COLORS.darker + 'BB'] // Locked: Dark
