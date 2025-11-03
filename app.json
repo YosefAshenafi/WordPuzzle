@@ -2,6 +2,7 @@
   "expo": {
     "name": "Bizzle",
     "slug": "bizzle",
+    "owner": "jossyfreelancer",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
@@ -36,8 +37,12 @@
     },
     "extra": {
       "eas": {
-        "projectId": "bizle"
+        "projectId": "faea78c0-76e5-455f-8478-29527ef80ef0"
       }
+    },
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/faea78c0-76e5-455f-8478-29527ef80ef0"
     }
   }
 }

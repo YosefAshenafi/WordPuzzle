@@ -24,6 +24,7 @@
     "expo-linear-gradient": "~15.0.7",
     "expo-splash-screen": "~31.0.10",
     "expo-status-bar": "~3.0.8",
+    "expo-updates": "~29.0.12",
     "expo-web-browser": "~15.0.8",
     "firebase": "^12.5.0",
     "moti": "^0.27.0",
