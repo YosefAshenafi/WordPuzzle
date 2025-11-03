@@ -44,7 +44,7 @@ const translations = {
       dataResetSuccess: "All your data has been reset successfully.",
       error: "Error",
       dataResetError: "Failed to reset data. Please try again.",
-      aboutUsContent: "🧩 Bible Puzzle Quest\n\nWe are a group of multidisciplinary individuals dedicated to creating a fun Christian puzzle game that encourages kids to explore Bible verses and captivating stories. Our mission is to make learning about the Bible an unforgettable adventure, combining interactive puzzles with uplifting gospel music.\n\n",
+      aboutUsContent: "🧩 Bizzle\n\nWe are a group of multidisciplinary individuals dedicated to creating a fun Christian puzzle game that encourages kids to explore Bible verses and captivating stories. Our mission is to make learning about the Bible an unforgettable adventure, combining interactive puzzles with uplifting gospel music.\n\n",
       madeWithFaith: "Made with faith and love",
     },
     // Game Screen

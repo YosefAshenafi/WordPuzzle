@@ -209,7 +209,7 @@ export const AuthScreen = () => {
             <View style={styles.footer}>
               <View style={styles.footerCard}>
                 <Text style={styles.footerText}>
-                  Join the Bible puzzle adventure
+                  Join the Bizzle adventure
                 </Text>
               </View>
             </View>

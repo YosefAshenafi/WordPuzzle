@@ -63,7 +63,7 @@ Bizzle is a mobile puzzle game that takes players on a journey through six bibli
 ## 📋 Project Structure
 
 ```
-WordPuzzle/
+bizzle/
 ├── App.js                          # Main app entry point
 ├── app.json                        # Expo configuration
 ├── package.json                    # Dependencies
@@ -120,7 +120,7 @@ WordPuzzle/
 1. **Clone the repository**:
 ```bash
 git clone <repository-url>
-cd WordPuzzle
+cd bizzle
 ```
 
 2. **Install dependencies**:
