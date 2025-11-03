@@ -193,7 +193,7 @@ export const GameOverModal = ({
       <Animated.View style={[styles.overlay, { opacity: fadeAnim }]}>
         <Animated.View style={[styles.modalContainer, { transform: [{ scale: scaleAnim }] }]}>
           <ImageBackground
-            source={require('../assets/images/daniel-lions.png')}
+            source={require('../assets/images/creation.png')}
             style={styles.backgroundImage}
             blurRadius={3}
           >
@@ -337,7 +337,7 @@ export const GameOverModal = ({
                    </View>
 
                    {/* Skip Button for Quiz */}
-                   {!showResult && (
+                   {/* {!showResult && (
                      <TouchableOpacity
                        style={styles.skipQuizButton}
                        onPress={handleSkipQuiz}
@@ -345,7 +345,7 @@ export const GameOverModal = ({
                      >
                        <Text style={styles.skipQuizButtonText}>⚡ {t('gameOver.skipContinue')}</Text>
                      </TouchableOpacity>
-                   )}
+                   )} */}
 
                    {/* Result Message */}
                    {showResult && (
