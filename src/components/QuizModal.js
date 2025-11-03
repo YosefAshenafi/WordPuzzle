@@ -17,7 +17,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 const { width, height } = Dimensions.get('window');
 
 export const QuizModal = ({ visible, onClose, onCorrectAnswer }) => {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showResult, setShowResult] = useState(false);
@@ -83,13 +83,13 @@ export const QuizModal = ({ visible, onClose, onCorrectAnswer }) => {
   }, [timeLeft, visible, showResult]);
 
   const loadNewQuestion = () => {
-    const question = getRandomQuestion();
+    const question = getRandomQuestion(currentLanguage);
     setCurrentQuestion(question);
     setSelectedAnswer(null);
     setShowResult(false);
     setTimeLeft(QUIZ_CONFIG.TIMEOUT_SECONDS);
     setIsTimedOut(false);
-    
+
     // Reset timer animation
     timerWidthAnim.setValue(100);
   };

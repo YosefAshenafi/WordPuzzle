@@ -14,7 +14,7 @@ import {
 import { useFocusEffect } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, GRADIENTS } from '../constants/colors';
-import { getRandomVerse, LEVELS } from '../constants/levels';
+import { getRandomVerse, getLevels } from '../constants/levels';
 import { getProgress, getAllStats, loadCurrentGameState } from '../utils/storage';
 import { useAuth } from '../contexts/AuthContext';
 import { stopAllLevelSounds } from '../utils/audio';
@@ -23,7 +23,8 @@ import { useLanguage } from '../contexts/LanguageContext';
 const { width, height } = Dimensions.get('window');
 
 export const HomeScreen = ({ navigation }) => {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
+  const LEVELS = getLevels(currentLanguage);
   const { user, signOut } = useAuth();
   const [verse, setVerse] = useState('');
   const [completedCount, setCompletedCount] = useState(0);
@@ -41,7 +42,7 @@ export const HomeScreen = ({ navigation }) => {
   const button2Scale = new Animated.Value(1);
 
   useEffect(() => {
-    setVerse(getRandomVerse());
+    setVerse(getRandomVerse(currentLanguage));
     loadProgress();
 
     // Set initial values immediately
@@ -158,13 +159,13 @@ const loadProgress = async () => {
     setRefreshing(true);
     try {
       await loadProgress();
-      setVerse(getRandomVerse());
+      setVerse(getRandomVerse(currentLanguage));
     } catch (error) {
       console.error('Error refreshing data:', error);
     } finally {
       setRefreshing(false);
     }
-  }, []);
+  }, [currentLanguage]);
 
   return (
     <LinearGradient

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import i18n from '../utils/i18n';
 
 const LanguageContext = createContext();
@@ -13,7 +13,6 @@ export const useLanguage = () => {
 
 export const LanguageProvider = ({ children }) => {
   const [currentLanguage, setCurrentLanguage] = useState(i18n.getCurrentLanguage());
-  const [, forceUpdate] = useState({});
 
   useEffect(() => {
     // Initialize i18n
@@ -24,25 +23,24 @@ export const LanguageProvider = ({ children }) => {
     // Subscribe to language changes
     const unsubscribe = i18n.subscribe(() => {
       setCurrentLanguage(i18n.getCurrentLanguage());
-      forceUpdate({});
     });
 
     return unsubscribe;
   }, []);
 
-  const changeLanguage = async (language) => {
+  const changeLanguage = useCallback(async (language) => {
     await i18n.setLanguage(language);
-  };
+  }, []);
 
-  const t = (key) => {
+  const t = useCallback((key) => {
     return i18n.t(key);
-  };
+  }, [currentLanguage]); // Re-create when language changes
 
-  const value = {
+  const value = useMemo(() => ({
     currentLanguage,
     changeLanguage,
     t,
-  };
+  }), [currentLanguage, changeLanguage, t]);
 
   return (
     <LanguageContext.Provider value={value}>

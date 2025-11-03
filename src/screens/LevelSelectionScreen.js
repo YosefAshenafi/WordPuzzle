@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, GRADIENTS, QUIZ_CONFIG } from '../constants/colors';
-import { LEVELS } from '../constants/levels';
+import { getLevels } from '../constants/levels';
 import { LevelCard } from '../components/LevelCard';
 import { QuizModal } from '../components/QuizModal';
 import { getProgress } from '../utils/storage';
@@ -18,7 +18,8 @@ import { stopAllLevelSounds } from '../utils/audio';
 import { useLanguage } from '../contexts/LanguageContext';
 
 export const LevelSelectionScreen = ({ navigation }) => {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
+  const LEVELS = getLevels(currentLanguage);
   const [progress, setProgress] = useState({});
   const [loading, setLoading] = useState(true);
   const [showQuiz, setShowQuiz] = useState(false);

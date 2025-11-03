@@ -16,18 +16,18 @@ import { useLanguage } from '../contexts/LanguageContext';
 
 const { width, height } = Dimensions.get('window');
 
-export const GameOverModal = ({ 
-  visible, 
-  onClose, 
-  onRetry, 
-  onBackToLevels, 
+export const GameOverModal = ({
+  visible,
+  onClose,
+  onRetry,
+  onBackToLevels,
   levelTitle,
   restartCount,
   maxMoves,
   timeTaken = 0,
   isTimeUp = false
 }) => {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const [showQuiz, setShowQuiz] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -87,13 +87,13 @@ export const GameOverModal = ({
   }, [timeLeft, showQuiz, showResult]);
 
   const loadNewQuestion = () => {
-    const question = getRandomQuestion();
+    const question = getRandomQuestion(currentLanguage);
     setCurrentQuestion(question);
     setSelectedAnswer(null);
     setShowResult(false);
     setTimeLeft(QUIZ_CONFIG.TIMEOUT_SECONDS);
     setIsTimedOut(false);
-    
+
     // Reset timer animation
     timerWidthAnim.setValue(100);
   };
