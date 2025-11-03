@@ -123,6 +123,26 @@ const handleSelectLevel = (level) => {
                 />
               </View>
             ))}
+
+            {/* More Stories Coming Soon Card */}
+            <View style={styles.comingSoonCard}>
+              <LinearGradient
+                colors={[COLORS.darker + 'DD', COLORS.darker + 'BB']}
+                style={styles.comingSoonGradient}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+              >
+                <View style={styles.lockContainer}>
+                  <Text style={styles.lockIcon}>🔒</Text>
+                  <Text style={styles.lockText}>{t('levelCard.locked')}</Text>
+                </View>
+                <View style={styles.content}>
+                  <Text style={styles.levelNumber}>{t('levelCard.level')} 7+</Text>
+                  <Text style={styles.title}>{t('levelSelection.moreStoriesComingSoon')}</Text>
+                  <Text style={styles.ref}>{t('levelSelection.newAdventuresPrepared')}</Text>
+                </View>
+              </LinearGradient>
+            </View>
           </View>
 
 {completedCount === 6 && (
@@ -274,6 +294,71 @@ const styles = StyleSheet.create({
     color: COLORS.gold,
     textAlign: 'center',
     marginBottom: 16,
+    fontStyle: 'italic',
+  },
+  comingSoonCard: {
+    height: 220,
+    borderRadius: 16,
+    overflow: 'hidden',
+    marginVertical: 10,
+    marginBottom: 30,
+    backgroundColor: COLORS.gray,
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  comingSoonGradient: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    paddingBottom: 16,
+  },
+  lockContainer: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginLeft: -40,
+    marginTop: -40,
+    width: 80,
+    height: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: COLORS.darker + 'EE',
+    borderRadius: 40,
+    borderWidth: 2,
+    borderColor: COLORS.gold + '66',
+  },
+  lockIcon: {
+    fontSize: 36,
+    marginBottom: 4,
+  },
+  lockText: {
+    color: COLORS.gold,
+    fontSize: 11,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+  },
+  content: {
+    paddingHorizontal: 16,
+  },
+  levelNumber: {
+    fontSize: 12,
+    color: COLORS.gold,
+    fontWeight: '600',
+    letterSpacing: 1,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: COLORS.white,
+    marginTop: 4,
+    marginBottom: 4,
+  },
+  ref: {
+    fontSize: 12,
+    color: COLORS.light,
     fontStyle: 'italic',
   },
 });

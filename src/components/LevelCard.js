@@ -20,7 +20,8 @@ export const LevelCard = ({
 }) => {
   const { t } = useLanguage();
   const [scaleAnim] = useState(new Animated.Value(1));
-  const [opacityAnim] = useState(new Animated.Value(isUnlocked ? 1 : 0.6));
+  // Completed and unlocked levels are bright (opacity 1), locked levels are dimmed (0.5)
+  const [opacityAnim] = useState(new Animated.Value(isUnlocked ? 1 : 0.5));
 
   const handlePress = () => {
     Animated.sequence([
@@ -47,9 +48,11 @@ export const LevelCard = ({
         >
           <LinearGradient
             colors={
-              isUnlocked 
-                ? [COLORS.darker + '99', COLORS.darker + '66']
-                : [COLORS.darker + 'DD', COLORS.darker + 'BB']
+              isCompleted
+                ? [COLORS.darker + '22', COLORS.darker + '11'] // Completed: Almost no overlay
+                : isUnlocked
+                ? [COLORS.darker + '33', COLORS.darker + '22'] // Unlocked: Very minimal overlay
+                : [COLORS.darker + 'DD', COLORS.darker + 'BB'] // Locked: Dark
             }
             style={styles.overlay}
           >
@@ -150,19 +153,23 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 12,
     right: 12,
-    backgroundColor: COLORS.success,
+    backgroundColor: COLORS.gold,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
-    shadowColor: COLORS.black,
+    shadowColor: COLORS.gold,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.6,
     shadowRadius: 4,
     elevation: 4,
+    borderWidth: 1,
+    borderColor: COLORS.white + '40',
   },
   completedText: {
-    color: COLORS.white,
+    color: COLORS.darker,
     fontSize: 12,
     fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
 });

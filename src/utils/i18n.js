@@ -119,6 +119,8 @@ const translations = {
       wisdomGranted: "🎉 Wisdom Granted!",
       correctAnswerMessage: "You have answered correctly! Your quest continues with a fresh start.",
       beginNewQuest: "Begin New Quest",
+      moreStoriesComingSoon: "More Stories Coming Soon!",
+      newAdventuresPrepared: "New biblical adventures are being prepared for you",
     },
     // Level Card Component
     levelCard: {
@@ -249,6 +251,8 @@ const translations = {
       wisdomGranted: "🎉 ጥበብ ተሰጠ!",
       correctAnswerMessage: "በትክክል መልሰዋል! ጉዞዎ በአዲስ መልክ ይቀጥላል።",
       beginNewQuest: "አዲስ ጉዞ ይጀምሩ",
+      moreStoriesComingSoon: "ተጨማሪ ታሪኮች በቅርቡ!",
+      newAdventuresPrepared: "አዳዲስ የመጽሐፍ ቅዱስ ታሪኮች ለእርስዎ በዝግጅት ላይ ናቸው",
     },
     // Level Card Component
     levelCard: {
