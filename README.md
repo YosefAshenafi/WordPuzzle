@@ -1,6 +1,11 @@
 # 🧩 Bizzle - Biblical Word Puzzle Game
 
 A spiritually inspired word puzzle adventure game built with Expo React Native (SDK 54). Combine Bible storytelling with interactive jigsaw puzzle gameplay to unlock sacred stories from Scripture.
+![home](https://github.com/user-attachments/assets/9b4f2fdf-1625-43b0-91da-4f73511c9752)
+![home1](https://github.com/user-attachments/assets/ddb35dd5-85da-417b-b2f8-ca869f408928)
+![home2](https://github.com/user-attachments/assets/5a8ac698-a0e8-4b22-907f-72c61399772f)
+
+
 
 ## 🎮 Game Overview
 
