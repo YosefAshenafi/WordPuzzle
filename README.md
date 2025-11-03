@@ -1,14 +1,9 @@
 # 🧩 Bizzle - Biblical Word Puzzle Game
-
 A spiritually inspired word puzzle adventure game built with Expo React Native (SDK 54). Combine Bible storytelling with interactive jigsaw puzzle gameplay to unlock sacred stories from Scripture.
-![home](https://github.com/user-attachments/assets/9b4f2fdf-1625-43b0-91da-4f73511c9752)
-![home1](https://github.com/user-attachments/assets/ddb35dd5-85da-417b-b2f8-ca869f408928)
-![home2](https://github.com/user-attachments/assets/5a8ac698-a0e8-4b22-907f-72c61399772f)
 
-
+<img src="https://github.com/user-attachments/assets/9b4f2fdf-1625-43b0-91da-4f73511c9752" height="60" alt="home" /> <img src="https://github.com/user-attachments/assets/ddb35dd5-85da-417b-b2f8-ca869f408928" height="60" alt="home1" /> <img src="https://github.com/user-attachments/assets/5a8ac698-a0e8-4b22-907f-72c61399772f" height="60" alt="home2" />
 
 ## 🎮 Game Overview
-
 Bizzle is a mobile puzzle game that takes players on a journey through six biblical stories through jigsaw puzzle gameplay. Each completed puzzle unlocks a new chapter of biblical history, accompanied by beautiful background music and storytelling.
 
 ### Stories Included
@@ -47,7 +42,6 @@ Bizzle is a mobile puzzle game that takes players on a journey through six bibli
 - **Level-specific Images** bundled locally
 
 ## 🛠️ Technology Stack
-
 - **Framework**: Expo SDK 54
 - **React**: 19.1.0
 - **React Native**: 0.81.5
@@ -66,7 +60,6 @@ Bizzle is a mobile puzzle game that takes players on a journey through six bibli
   - react-native-confetti-view 1.0.0
 
 ## 📋 Project Structure
-
 ```
 bizzle/
 ├── App.js                          # Main app entry point
@@ -121,35 +114,29 @@ bizzle/
 - Physical device with Expo Go app (optional)
 
 ### Installation
-
 1. **Clone the repository**:
 ```bash
 git clone <repository-url>
 cd bizzle
 ```
-
 2. **Install dependencies**:
 ```bash
 npm install
 # or
 yarn install
 ```
-
 3. **Start the development server**:
 ```bash
 npm start
 # or
 expo start
 ```
-
 4. **Run on iOS or Android**:
 ```bash
 # For iOS
 npm run ios
-
 # For Android
 npm run android
-
 # Or scan QR code with Expo Go app
 ```
 
@@ -256,20 +243,16 @@ COLORS = {
 - Breathing/pulse effects on splash screen
 
 ## 🌍 Internationalization (i18n)
-
 The app supports multiple languages through a custom translation system:
-
 **Supported Languages:**
 - English (`en`)
 - Amharic (`am`)
-
 **Translatable Content:**
 - UI labels and buttons
 - Level titles and stories
 - Bible verses and references
 - Error messages
 - Game instructions
-
 Language can be toggled from the Home Screen.
 
 ## 📊 Data Persistence
@@ -301,7 +284,6 @@ Language can be toggled from the Home Screen.
 ```
 
 ## 🔐 Authentication
-
 Firebase Authentication integrated with:
 - **Google Sign-In** (OAuth)
 - **Email/Password** authentication
@@ -310,7 +292,6 @@ Firebase Authentication integrated with:
 - Mock Firestore for user data (ready for implementation)
 
 ## 🎵 Audio Assets
-
 Each level includes background music:
 - `samson.MP3`
 - `jesus.MP3`
@@ -318,13 +299,10 @@ Each level includes background music:
 - `creation.mp3`
 - `all-the-world.MP3`
 - `song-to-jesus.MP3`
-
 Audio files are located in `src/assets/sounds/`
 
 ## 📖 Biblical Content
-
 All stories are biblically accurate with direct references:
-
 1. **Samson** - Judges 13-16 (Divine strength and redemption)
 2. **Jesus** - Matthew 1-28 (Life, death, and resurrection)
 3. **The Word** - Exodus 20 (Ten Commandments)
@@ -333,14 +311,12 @@ All stories are biblically accurate with direct references:
 6. **Song To Jesus** - Psalm 150 (Worship and praise)
 
 ## 🐛 Known Limitations
-
 - Firebase configured but using mock data for leaderboard
 - No cloud sync for progress (local only)
 - Limited to 6 levels (expandable)
 - Audio requires internet on first load
 
 ## 🔮 Future Enhancements
-
 - [ ] Cloud save sync via Firebase Firestore
 - [ ] Real leaderboard with global rankings
 - [ ] Additional biblical stories (New Testament expansion)
@@ -355,15 +331,12 @@ All stories are biblically accurate with direct references:
 - [ ] Multiplayer challenges
 
 ## 🙏 Spiritual Purpose
-
 Bizzle is designed to be both entertaining and spiritually enriching, introducing players to important biblical narratives in an interactive and memorable way. Through puzzle-solving and engaging gameplay, players connect with timeless stories of faith, redemption, and God's love.
 
 ## 📄 License
-
 MIT License - Feel free to use this as a base for your own projects.
 
 ## 🤝 Contributing
-
 Contributions are welcome! Please feel free to:
 - Fork the repository
 - Create feature branches
@@ -371,14 +344,11 @@ Contributions are welcome! Please feel free to:
 - Report issues
 
 ## 📧 Support
-
 For issues or questions:
 - Check the [Expo documentation](https://docs.expo.dev/)
 - Review the Firebase setup guide
 - Open an issue on GitHub
 
 ---
-
 **Made with ❤️ and faith**
-
 *"Let everything that has breath praise the Lord." - Psalm 150:6*
