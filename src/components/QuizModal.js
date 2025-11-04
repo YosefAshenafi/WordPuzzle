@@ -8,6 +8,7 @@ import {
   Animated,
   Dimensions,
   ImageBackground,
+  ScrollView,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, GRADIENTS, QUIZ_CONFIG } from '../constants/colors';
@@ -183,131 +184,133 @@ export const QuizModal = ({ visible, onClose, onCorrectAnswer }) => {
               end={{ x: 1, y: 1 }}
               style={styles.gradientOverlay}
             >
-              {/* Background decorative circles */}
-              <View style={styles.backgroundDecor}>
-                <View style={[styles.decorCircle, styles.circle1]} />
-                <View style={[styles.decorCircle, styles.circle2]} />
-                <View style={[styles.decorCircle, styles.circle3]} />
-              </View>
-
-              {/* Header with Score and Streak */}
-               <View style={styles.header}>
-                 <View style={styles.scoreContainer}>
-                   <Text style={styles.scoreLabel}>{t('quiz.score')}</Text>
-                   <Text style={styles.scoreValue}>{score}</Text>
-                 </View>
-                 
-                 <View style={styles.titleContainer}>
-                   <Text style={styles.title}>📖 {t('quiz.divineWisdom')}</Text>
-                   <Text style={styles.subtitle}>{t('quiz.answerToContinue')}</Text>
-                 </View>
-                 
-                 <View style={styles.streakContainer}>
-                   <Text style={styles.streakLabel}>{t('quiz.streak')}</Text>
-                   <Text style={styles.streakValue}>🔥 {streak}</Text>
-                 </View>
-               </View>
-
-              {/* Timer Bar */}
-              <View style={styles.timerContainer}>
-                <View style={styles.timerBackground}>
-                  <Animated.View 
-                    style={[
-                      styles.timerBar, 
-                      { 
-                        width: timerWidthAnim.interpolate({
-                          inputRange: [0, 100],
-                          outputRange: ['0%', '100%'],
-                        }),
-                        backgroundColor: timeLeft <= 3 ? COLORS.error : COLORS.success
-                      }
-                    ]} 
-                  />
+              <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
+                {/* Background decorative circles */}
+                <View style={styles.backgroundDecor}>
+                  <View style={[styles.decorCircle, styles.circle1]} />
+                  <View style={[styles.decorCircle, styles.circle2]} />
+                  <View style={[styles.decorCircle, styles.circle3]} />
                 </View>
-                <Animated.View style={[styles.timerText, { transform: [{ scale: pulseAnim }] }]}>
-                  <Text style={[
-                    styles.timerNumber,
-                    { color: timeLeft <= 3 ? COLORS.error : COLORS.gold }
-                  ]}>
-                    {timeLeft}
-                  </Text>
-                </Animated.View>
-              </View>
 
-              {/* Question Card */}
-               <View style={styles.questionCard}>
-                 <View style={styles.questionHeader}>
-                   <Text style={styles.questionNumber}>{t('quiz.question')} {streak + 1}</Text>
-                   <Text style={styles.difficulty}>⚡ {t('quiz.divineChallenge')}</Text>
-                 </View>
-                 
-                 <Text style={styles.question}>{currentQuestion.question}</Text>
-                 <Text style={styles.reference}>📜 {currentQuestion.reference}</Text>
-               </View>
+                {/* Header with Score and Streak */}
+                <View style={styles.header}>
+                  <View style={styles.scoreContainer}>
+                    <Text style={styles.scoreLabel}>{t('quiz.score')}</Text>
+                    <Text style={styles.scoreValue}>{score}</Text>
+                  </View>
+                  
+                  <View style={styles.titleContainer}>
+                    <Text style={styles.title}>📖 {t('quiz.divineWisdom')}</Text>
+                    <Text style={styles.subtitle}>{t('quiz.answerToContinue')}</Text>
+                  </View>
+                  
+                  <View style={styles.streakContainer}>
+                    <Text style={styles.streakLabel}>{t('quiz.streak')}</Text>
+                    <Text style={styles.streakValue}>🔥 {streak}</Text>
+                  </View>
+                </View>
 
-              {/* Answer Options */}
-              <View style={styles.answersContainer}>
-                {currentQuestion.options.map((option, index) => {
-                  const isCorrect = index === currentQuestion.correctAnswer;
-                  const isSelected = index === selectedAnswer;
+                {/* Timer Bar */}
+                <View style={styles.timerContainer}>
+                  <View style={styles.timerBackground}>
+                    <Animated.View 
+                      style={[
+                        styles.timerBar, 
+                        { 
+                          width: timerWidthAnim.interpolate({
+                            inputRange: [0, 100],
+                            outputRange: ['0%', '100%'],
+                          }),
+                          backgroundColor: timeLeft <= 3 ? COLORS.error : COLORS.success
+                        }
+                      ]} 
+                    />
+                  </View>
+                  <Animated.View style={[styles.timerText, { transform: [{ scale: pulseAnim }] }]}>
+                    <Text style={[
+                      styles.timerNumber,
+                      { color: timeLeft <= 3 ? COLORS.error : COLORS.gold }
+                    ]}>
+                      {timeLeft}
+                    </Text>
+                  </Animated.View>
+                </View>
+
+                {/* Question Card */}
+                <View style={styles.questionCard}>
+                  <View style={styles.questionHeader}>
+                    <Text style={styles.questionNumber}>{t('quiz.question')} {streak + 1}</Text>
+                    <Text style={styles.difficulty}>⚡ {t('quiz.divineChallenge')}</Text>
+                  </View>
                   
-                  let buttonStyle = styles.answerButton;
-                  let textStyle = styles.answerText;
-                  let icon = '⭕';
-                  
-                  if (showResult) {
-                    if (isCorrect) {
-                      buttonStyle = styles.correctAnswer;
-                      textStyle = styles.correctAnswerText;
-                      icon = '✅';
-                    } else if (isSelected && !isCorrect) {
-                      buttonStyle = styles.wrongAnswer;
-                      textStyle = styles.wrongAnswerText;
-                      icon = '❌';
+                  <Text style={styles.question}>{currentQuestion.question}</Text>
+                  <Text style={styles.reference}>📜 {currentQuestion.reference}</Text>
+                </View>
+
+                {/* Answer Options */}
+                <View style={styles.answersContainer}>
+                  {currentQuestion.options.map((option, index) => {
+                    const isCorrect = index === currentQuestion.correctAnswer;
+                    const isSelected = index === selectedAnswer;
+                    
+                    let buttonStyle = styles.answerButton;
+                    let textStyle = styles.answerText;
+                    let icon = '⭕';
+                    
+                    if (showResult) {
+                      if (isCorrect) {
+                        buttonStyle = styles.correctAnswer;
+                        textStyle = styles.correctAnswerText;
+                        icon = '✅';
+                      } else if (isSelected && !isCorrect) {
+                        buttonStyle = styles.wrongAnswer;
+                        textStyle = styles.wrongAnswerText;
+                        icon = '❌';
+                      }
                     }
-                  }
-                  
-                  return (
-                    <TouchableOpacity
-                      key={index}
-                      style={[buttonStyle, { transform: [{ translateX: shakeAnim }] }]}
-                      onPress={() => handleAnswerSelect(index)}
-                      disabled={showResult}
-                      activeOpacity={0.8}
-                    >
-                      <View style={styles.answerContent}>
-                        <Text style={styles.answerIcon}>{icon}</Text>
-                        <Text style={textStyle}>{option}</Text>
-                      </View>
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
+                    
+                    return (
+                      <TouchableOpacity
+                        key={index}
+                        style={[buttonStyle, { transform: [{ translateX: shakeAnim }] }]}
+                        onPress={() => handleAnswerSelect(index)}
+                        disabled={showResult}
+                        activeOpacity={0.8}
+                      >
+                        <View style={styles.answerContent}>
+                          <Text style={styles.answerIcon}>{icon}</Text>
+                          <Text style={textStyle}>{option}</Text>
+                        </View>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
 
-              {/* Result Message */}
-               {showResult && (
-                 <Animated.View style={styles.resultContainer}>
-                   {isTimedOut ? (
-                     <Text style={styles.timeoutText}>⏰ {t('quiz.timesUpTryAgain')}</Text>
-                   ) : selectedAnswer === currentQuestion.correctAnswer ? (
-                     <Text style={styles.correctText}>🎉 {t('quiz.correctPoints', { points: timeLeft * 10 })}</Text>
-                   ) : (
-                     <Text style={styles.wrongText}>❌ {t('quiz.notQuiteRightTryAgain')}</Text>
-                   )}
-                 </Animated.View>
-               )}
+                {/* Result Message */}
+                {showResult && (
+                  <Animated.View style={styles.resultContainer}>
+                    {isTimedOut ? (
+                      <Text style={styles.timeoutText}>⏰ {t('quiz.timesUpTryAgain')}</Text>
+                    ) : selectedAnswer === currentQuestion.correctAnswer ? (
+                      <Text style={styles.correctText}>🎉 {t('quiz.correctPoints', { points: timeLeft * 10 })}</Text>
+                    ) : (
+                      <Text style={styles.wrongText}>❌ {t('quiz.notQuiteRightTryAgain')}</Text>
+                    )}
+                  </Animated.View>
+                )}
 
-              {/* Instructions */}
-               <View style={styles.instructionContainer}>
-                 <Text style={styles.instructionText}>
-                   {showResult 
-                     ? (selectedAnswer === currentQuestion.correctAnswer 
-                         ? t('quiz.wisdomGranted') 
-                         : t('quiz.seekAnswerTryAgain'))
-                     : t('quiz.chooseWisely')
-                   }
-                 </Text>
-               </View>
+              </ScrollView>
+                {/* Instructions */}
+                <View style={styles.instructionContainer}>
+                  <Text style={styles.instructionText}>
+                    {showResult 
+                      ? (selectedAnswer === currentQuestion.correctAnswer 
+                          ? t('quiz.wisdomGranted') 
+                          : t('quiz.seekAnswerTryAgain'))
+                      : t('quiz.chooseWisely')
+                    }
+                  </Text>
+                </View>
             </LinearGradient>
           </ImageBackground>
         </Animated.View>
@@ -342,7 +345,7 @@ const styles = StyleSheet.create({
   },
   gradientOverlay: {
     flex: 1,
-    padding: 20,
+    padding: 15,
   },
   backgroundDecor: {
     position: 'absolute',
@@ -582,6 +585,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white + '10',
     borderRadius: 12,
     padding: 12,
+    marginTop: 12,
     alignItems: 'center',
     borderWidth: 1,
     borderColor: COLORS.white + '20',
@@ -592,4 +596,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '600',
   },
+  scrollView: {
+    borderRadius: 12,
+  }
 });
