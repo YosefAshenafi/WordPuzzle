@@ -187,12 +187,8 @@ export const PuzzleFlipCard = ({ visible, levelData, onClose, moveCount, timeTak
             </Animated.View>
           </Animated.View>
 
-          {/* Tap area for flipping */}
-          <TouchableOpacity
-            style={styles.tapArea}
-            onPress={handleClose}
-            activeOpacity={1}
-          />
+          {/* Tap area for flipping -- Removed for it was preventing the scrolling functionality to read the whole story */}
+          
         </View>
       </View>
       
